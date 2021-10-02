@@ -10,6 +10,25 @@ public class ToddlerController : MonoBehaviour
     bool alreadyMoving = false;
     bool readyToRun = false;
     float lerpDuration = 0.5f;
+    bool _beingGrabbed = false;
+    public bool beingGrabbed
+    {
+        get { return _beingGrabbed;  }
+        set
+        {
+            _beingGrabbed = value;
+            if (_beingGrabbed) { alreadyMoving = false; }
+            StopAllCoroutines();
+        }
+    }
+
+    bool oooSomethingElse
+    {
+        get
+        {
+            return UnityEngine.Random.value < 0.2f;
+        }
+    }
 
     enum TAction
     {
@@ -22,6 +41,7 @@ public class ToddlerController : MonoBehaviour
     private void Awake()
     {
         targetPosition = getRandomPositionNearToddler();
+        beingGrabbed = false;
     }
 
     // Start is called before the first frame update
@@ -32,13 +52,20 @@ public class ToddlerController : MonoBehaviour
 
     void Update()
     {
-        if(!alreadyMoving)
+        if(!alreadyMoving && !_beingGrabbed)
         {
             alreadyMoving = true;
             if (readyToRun)
             {
                 readyToRun = false;
-                StartCoroutine(MoveToTarget(targetPosition));
+                if (oooSomethingElse)
+                {
+                    alreadyMoving = false;
+                }
+                else
+                {
+                    StartCoroutine(MoveToTarget(targetPosition));
+                }
             }
             else
             {
@@ -48,7 +75,6 @@ public class ToddlerController : MonoBehaviour
                 {
                     case TAction.runTowardTarget:
                         alreadyMoving = false;
-                        //StartCoroutine(MoveToTarget(targetPosition));
                         break;
                     case TAction.spin:
                         StartCoroutine(Spin(UnityEngine.Random.Range(1.0f, 2.0f)));
@@ -149,5 +175,21 @@ public class ToddlerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(targetPosition, 0.3f);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+            beingGrabbed = true;
+            alreadyMoving = false;
+            StopAllCoroutines();
+        
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+
+            beingGrabbed = false;
+        
     }
 }

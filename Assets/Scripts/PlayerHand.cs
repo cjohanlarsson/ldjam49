@@ -88,6 +88,10 @@ public class PlayerHand : MonoBehaviour
 					if (amount > 0)
 					{
 						grabbedObject = this.colliders[0].gameObject;
+						if(grabbedObject.name == "Toddler")
+                        {
+							grabbedObject.GetComponent<ToddlerController>().beingGrabbed = true;
+                        }
 						this.grabState = GrabState.Grabbed;
 						this.timeSinceLastGrabState = 0.0f;
 					}
@@ -100,6 +104,10 @@ public class PlayerHand : MonoBehaviour
 				shouldHandBeClosed = true;
 				if (this.timeSinceLastGrabState > this.grabDuration || !isGrabKeyHeld)
 				{
+					if (grabbedObject.name == "Toddler")
+					{
+						grabbedObject.GetComponent<ToddlerController>().beingGrabbed = false;
+					}
 					this.grabbedObject = null;
 					this.grabState = GrabState.Cooldown;
 					this.timeSinceLastGrabState = 0.0f;
