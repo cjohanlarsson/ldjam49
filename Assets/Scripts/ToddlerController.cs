@@ -259,6 +259,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator MoveTowardTarget(Vector3 targetPos)
     {
         this.isMoving = true;
+        // stop "up!" sfx
         audioSource.Stop();
         var startTime = Time.time;
         while ((Time.time - startTime) < this.maxMovementDuration)
@@ -279,6 +280,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator MoveToTarget(Vector3 targetPos)
     {
         print("Running");
+        // stop "up!" sfx
         audioSource.Stop();
         // pre-cache the initial position
         var startPos = transform.position;
@@ -320,6 +322,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator Spin(float duration)
     {
         print("Spinning");
+        // stop "up!" sfx
         audioSource.Stop();
         float endTime = Time.realtimeSinceStartup + duration;
 
@@ -335,6 +338,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator TurnTowardTarget(Vector3 targetPos)
     {
         print("Turning");
+        // stop "up!" sfx
         audioSource.Stop();
         Quaternion startRotation = transform.rotation;
         Vector3 direction = (targetPos - transform.position).normalized;
@@ -356,6 +360,7 @@ public class ToddlerController : MonoBehaviour
 
     private IEnumerator Jump()
     {
+        // play "up!" sfx
         audioSource.Play();
         Vector3 startPos = transform.position;
         var startTime = Time.time;
@@ -384,6 +389,7 @@ public class ToddlerController : MonoBehaviour
     public void throwTantrum()
     {
         HasThrownTantrum = true;
+        // stop "up!" sfx
         audioSource.Stop();
         StopAllCoroutines();
         alreadyMoving = true;
