@@ -5,12 +5,19 @@ using UnityEngine;
 public class Bottle : MonoBehaviour
 {
 
+	[SerializeField] AudioClip bottleSpawn;
+	[SerializeField] AudioClip bottleDrink;
 
+	void Start()
+    {
+		AudioSource.PlayClipAtPoint(bottleSpawn, this.transform.position);
+    }
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if(other.GetComponentInChildren<ToddlerController>() != null)
 		{
+			AudioSource.PlayClipAtPoint(bottleDrink, this.transform.position);
 			GameObject.Destroy(this.gameObject);
 			BottleManager.Current.AddScore(1);
 		}
