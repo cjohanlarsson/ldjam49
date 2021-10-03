@@ -30,7 +30,10 @@ public class ToddlerController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
+    private AudioClip step;
+    // [SerializeField] AudioClip jumpSFX;
     [SerializeField] AudioClip tantrumSFX;
+    public AudioSource audioSource;
 
     Vector3 targetPosition;
     bool alreadyMoving = false;
@@ -38,14 +41,14 @@ public class ToddlerController : MonoBehaviour
     bool readyToRun = false;
     float lerpDuration = 0.5f;
     float startYPos;
-    
+
     HangryController hc;
     CharacterController characterController;
 
     bool _beingGrabbed = false;
     public bool beingGrabbed
     {
-        get { return _beingGrabbed;  }
+        get { return _beingGrabbed; }
         set
         {
             _beingGrabbed = value;
@@ -102,7 +105,7 @@ public class ToddlerController : MonoBehaviour
     }
     float hangryRatio
     {
-        get { return (hc.getHangryLevel() / hc.maxHangry);  }
+        get { return (hc.getHangryLevel() / hc.maxHangry); }
     }
 
     enum TAction
@@ -118,6 +121,7 @@ public class ToddlerController : MonoBehaviour
 
     private void Awake()
     {
+        audioSource = this.GetComponent<AudioSource>();
         Current = this;
 
         hc = GetComponent<HangryController>();
@@ -132,14 +136,14 @@ public class ToddlerController : MonoBehaviour
         }
     }
 
-	private void OnDestroy()
-	{
+    private void OnDestroy()
+    {
         if (Current == this)
             Current = null;
-	}
+    }
 
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         startYPos = transform.position.y;
     }
@@ -245,6 +249,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator MoveTowardTarget(Vector3 targetPos)
     {
         this.isMoving = true;
+        audioSource.Stop();
         var startTime = Time.time;
         while ((Time.time - startTime) < this.maxMovementDuration)
         {
@@ -264,6 +269,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator MoveToTarget(Vector3 targetPos)
     {
         print("Running");
+        audioSource.Stop();
         // pre-cache the initial position
         var startPos = transform.position;
 
@@ -304,6 +310,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator Spin(float duration)
     {
         print("Spinning");
+        audioSource.Stop();
         float endTime = Time.realtimeSinceStartup + duration;
 
         while (Time.realtimeSinceStartup < endTime)
@@ -318,7 +325,7 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator TurnTowardTarget(Vector3 targetPos)
     {
         print("Turning");
-        
+        audioSource.Stop();
         Quaternion startRotation = transform.rotation;
         Vector3 direction = (targetPos - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -339,7 +346,8 @@ public class ToddlerController : MonoBehaviour
 
     private IEnumerator Jump()
     {
-        print("Jumping");
+        // AudioSource.PlayClipAtPoint(jumpSFX, this.transform.position);
+        // audioSource.Play();
         Vector3 startPos = transform.position;
         var startTime = Time.time;
         while ((Time.time - startTime) < this.maxMovementDuration)
@@ -366,6 +374,7 @@ public class ToddlerController : MonoBehaviour
 
     public void throwTantrum()
     {
+        audioSource.Stop();
         StopAllCoroutines();
         alreadyMoving = true;
         // reset position if tantrum while jumping
