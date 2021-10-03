@@ -9,9 +9,14 @@ public class ToddlerController : MonoBehaviour
     public float baseRunSpeed = 2.0f;
     public float baseTurnSpeed = 1.0f;
     [Range(0.0f, 1.0f)]
+    [Tooltip("Higher makes toddler spin more often.")]
     public float spinningQuotient = 0.314f;
+    [Range(0.0f, 1.0f)]
+    [Tooltip("Higher makes toddler jump more often.")]
+    public float jumpingQuotient = 0.6f;
     [Range(1.0f, 3.5f)]
     public float baseSpinSpeed = 1.5f;
+    public float baseJumpSpeed = 4.0f;
 
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
@@ -28,6 +33,8 @@ public class ToddlerController : MonoBehaviour
     bool isMoving = false;
     bool readyToRun = false;
     float lerpDuration = 0.5f;
+    float startYPos;
+
     HangryController hc;
     CharacterController characterController;
 
@@ -39,6 +46,11 @@ public class ToddlerController : MonoBehaviour
         {
             _beingGrabbed = value;
             if (_beingGrabbed) { alreadyMoving = false; }
+            else
+            {
+                // reset position if grabbed while jumping
+                transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
+            }
             isMoving = false;
             StopAllCoroutines();
         }
@@ -77,6 +89,13 @@ public class ToddlerController : MonoBehaviour
         }
     }
 
+    float jumpSpeed
+    {
+        get
+        {
+            return baseJumpSpeed + 5 * hangryRatio;
+        }
+    }
     float hangryRatio
     {
         get { return (hc.getHangryLevel() / hc.maxHangry);  }
@@ -87,7 +106,8 @@ public class ToddlerController : MonoBehaviour
         Spin,
         Tantrum,
         RunTowardTarget,
-        TurnTowardTarget
+        TurnTowardTarget,
+        Jump
     }
 
     public static ToddlerController Current { get; private set; }
@@ -117,7 +137,7 @@ public class ToddlerController : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        
+        startYPos = transform.position.y;
     }
 
     void Update()
@@ -160,6 +180,14 @@ public class ToddlerController : MonoBehaviour
                     case TAction.TurnTowardTarget:
                         targetPosition = getRandomPositionNearToddler();
                         StartCoroutine(TurnTowardTarget(targetPosition));
+                        break;
+                    case TAction.Jump:
+                        if (UnityEngine.Random.value < jumpingQuotient)
+                        {
+                            StartCoroutine(Jump());
+                        }
+                        else { alreadyMoving = false; }
+                        
                         break;
                 }
             }
@@ -288,15 +316,31 @@ public class ToddlerController : MonoBehaviour
         alreadyMoving = false;
     }
 
-    private IEnumerator Stomp()
+    private IEnumerator Jump()
     {
-        float v = 0;
-        while (v < 1.0)
+        print("Jumping");
+        Vector3 startPos = transform.position;
+        var startTime = Time.time;
+        while ((Time.time - startTime) < this.maxMovementDuration)
         {
-           // timeElapsed
+            float factor = Mathf.Abs(Mathf.Sin((Time.time - startTime) * jumpSpeed));
+            Vector3 newPos = new Vector3(transform.position.x, startPos.y + factor, transform.position.z);
+            transform.position = newPos;
+            yield return null;
         }
 
-        yield return null;
+        // smooth out landing
+        while (transform.position.y - startPos.y > 0.1f)
+        {
+            float factor = Mathf.Abs(Mathf.Sin((Time.time - startTime) * jumpSpeed));
+            Vector3 newPos = new Vector3(transform.position.x, startPos.y + factor, transform.position.z);
+            transform.position = newPos;
+            yield return null;
+        }
+
+        transform.position = startPos;
+
+        alreadyMoving = false;
     }
 
     private void OnDrawGizmos()
