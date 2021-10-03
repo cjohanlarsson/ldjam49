@@ -30,8 +30,9 @@ public class ToddlerController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
-    private AudioClip step;
     [SerializeField] AudioClip tantrumSFX;
+    [SerializeField] AudioClip[] jumpSFX;
+    private AudioClip step;
     private AudioSource audioSource;
 
     Vector3 targetPosition;

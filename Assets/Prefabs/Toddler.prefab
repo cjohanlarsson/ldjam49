@@ -770,6 +770,16 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7fcc0370bfa4e4d45894029160ad7a10, type: 3}
   - {fileID: 8300000, guid: cf729940cd7e942f9a5b44fb020c6a33, type: 3}
   tantrumSFX: {fileID: 8300000, guid: 1e3d157c5d7394c7b90da6139fb2e523, type: 3}
+  jumpSFX:
+  - {fileID: 8300000, guid: 0437ddb28699a49909cc1f38c84620e0, type: 3}
+  - {fileID: 8300000, guid: 26627967da6f3479580812ba0440c36f, type: 3}
+  - {fileID: 8300000, guid: 31aaa9174933b4ea1bf66dc995673711, type: 3}
+  - {fileID: 8300000, guid: 2309094f131b9421da5773849521353a, type: 3}
+  - {fileID: 8300000, guid: ee1d94989c3c5460990f2a15f3413775, type: 3}
+  - {fileID: 8300000, guid: 48874ec7452ec46e19600e601a72acc2, type: 3}
+  - {fileID: 8300000, guid: a6537301583334344a8e3791e23702ad, type: 3}
+  - {fileID: 8300000, guid: 6ffeb7f5eedab41b6b0569c4a37c0db9, type: 3}
+  - {fileID: 8300000, guid: 92bc4121c276e42b8a9b0b2a4d4181f5, type: 3}
 --- !u!114 &650929278
 MonoBehaviour:
   m_ObjectHideFlags: 0
