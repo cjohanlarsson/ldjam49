@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class Bottle : MonoBehaviour
 {
-	[SerializeField] AudioClip clip;
-	[SerializeField] AudioSource source;
+	[Header("Audio")]
+	[SerializeField] AudioClip bottleSpawn;
+	[SerializeField] AudioClip bottleDrink;
+
+	void Start()
+    {
+		AudioSource.PlayClipAtPoint(bottleSpawn, this.transform.position);
+    }
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if(other.GetComponentInChildren<ToddlerController>() != null)
 		{
-			source.Play();
-			AudioSource.PlayClipAtPoint(clip, this.transform.position);
-			foreach (var r in this.GetComponentsInChildren<Renderer>())
-			{
-				r.enabled = false;
-			}
-			GameObject.Destroy(this.gameObject, 3.0f);
+			AudioSource.PlayClipAtPoint(bottleDrink, this.transform.position);
+			GameObject.Destroy(this.gameObject);
 			BottleManager.Current.AddScore(1);
 		}
 	}
