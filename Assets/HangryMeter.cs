@@ -19,5 +19,9 @@ public class HangryMeter : MonoBehaviour
     {
         hangryAmount = Mathf.Min(hangryAmount, maxHangry);
         hangryRedLevel.fillAmount = hangryAmount / maxHangry;
+		if (hangryRedLevel.fillAmount > 0.0f)
+        {
+			hangryRedLevel.color = Color.Lerp(Color.yellow, Color.red, hangryRedLevel.fillAmount);
+        }
     }
 }
