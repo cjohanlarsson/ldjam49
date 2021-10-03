@@ -73,7 +73,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 61a6049b049134763b09341e9f604ee6, type: 3}
   - {fileID: 8300000, guid: 2fd99bde54eed458db79c8bb9ba949d0, type: 3}
   - {fileID: 8300000, guid: a6a28329cc4fe400b91717cbf615601c, type: 3}
-  points: []
 --- !u!1 &7443901257359710956
 GameObject:
   m_ObjectHideFlags: 0
