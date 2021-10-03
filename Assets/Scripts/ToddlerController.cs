@@ -343,6 +343,17 @@ public class ToddlerController : MonoBehaviour
         alreadyMoving = false;
     }
 
+    public void throwTantrum()
+    {
+        StopAllCoroutines();
+        alreadyMoving = true;
+        // reset position if tantrum while jumping
+        transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

@@ -73,7 +73,9 @@ public class HangryController : MonoBehaviour
             {
                 PlayHangrySoundAt(2);
             }
-            if (Hangriness >= maxHangry) { break; }
+            if (Hangriness >= maxHangry) {
+                GetComponent<ToddlerController>().throwTantrum();
+                break; }
             yield return new WaitForSeconds(1 / hangryRateOfIncrease);
         }
     }

@@ -1127,6 +1127,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 650929278, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: maxHangry
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 650929278, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: hangrySounds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 650929278, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: hangrySounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 049bd4b27c9934077a39431ff3a6de14, type: 3}
+    - target: {fileID: 650929278, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: hangrySounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 04bc81ff43e0744459a2069f34462a35, type: 3}
+    - target: {fileID: 650929278, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: hangrySounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 19fc6182a81b54e6c804caa82d1cbbe3, type: 3}
+    - target: {fileID: 1580606516, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: m_Radius
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580606516, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9180034193493357146, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
       propertyPath: m_RootOrder
       value: 5
