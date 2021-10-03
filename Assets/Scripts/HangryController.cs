@@ -10,7 +10,11 @@ public class HangryController : MonoBehaviour
     [SerializeField] float hangryRateOfIncrease = 1.0f;
     [SerializeField] public float maxHangry = 50.0f;
     [SerializeField] float _hangryLevel = 0;
-    
+
+    [Header("Audio")]
+    [SerializeField] AudioClip[] hangrySounds;
+    private AudioClip hangrySound;
+
     private float Hangriness
     {
         get { return _hangryLevel; }
@@ -49,6 +53,21 @@ public class HangryController : MonoBehaviour
         while (true)
         {
             Hangriness += 1;
+            if (100 * Hangriness / maxHangry == 26)
+            {
+                hangrySound = hangrySounds[0];
+                AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+            }
+            else if (100 * Hangriness / maxHangry == 50)
+            {
+                hangrySound = hangrySounds[1];
+                AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+            }
+            else if (100 * Hangriness / maxHangry == 76)
+            {
+                hangrySound = hangrySounds[2];
+                AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+            }
             if (Hangriness >= maxHangry) { break; }
             yield return new WaitForSeconds(1 / hangryRateOfIncrease);
         }
