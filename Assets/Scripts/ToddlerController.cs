@@ -30,9 +30,8 @@ public class ToddlerController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
     private AudioClip step;
-    // [SerializeField] AudioClip jumpSFX;
     [SerializeField] AudioClip tantrumSFX;
-    public AudioSource audioSource;
+    private AudioSource audioSource;
 
     Vector3 targetPosition;
     bool alreadyMoving = false;
@@ -343,8 +342,7 @@ public class ToddlerController : MonoBehaviour
 
     private IEnumerator Jump()
     {
-        // AudioSource.PlayClipAtPoint(jumpSFX, this.transform.position);
-        // audioSource.Play();
+        audioSource.Play();
         Vector3 startPos = transform.position;
         var startTime = Time.time;
         while ((Time.time - startTime) < this.maxMovementDuration)
