@@ -17,6 +17,7 @@ public class ToddlerController : MonoBehaviour
     [Range(1.0f, 3.5f)]
     public float baseSpinSpeed = 1.5f;
     public float baseJumpSpeed = 4.0f;
+    public GameObject loseScreen;
 
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
@@ -30,6 +31,7 @@ public class ToddlerController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
     private AudioClip step;
+    
 
     Vector3 targetPosition;
     bool alreadyMoving = false;
@@ -356,6 +358,7 @@ public class ToddlerController : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
+        loseScreen.SetActive(true);
     }
 
     private void OnDrawGizmos()
