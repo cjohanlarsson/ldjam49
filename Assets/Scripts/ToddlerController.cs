@@ -2,18 +2,22 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(HangryController))]
 public class ToddlerController : MonoBehaviour
 {
-    public float runSpeed = 2.0f;
-    public float turnSpeed = 100.0f;
+    public float baseRunSpeed = 2.0f;
+    public float baseTurnSpeed = 1.0f;
     [Range(0.0f, 1.0f)]
     public float spinningQuotient = 0.314f;
     [Range(1.0f, 3.5f)]
-    public float spinSpeed = 2.5f;
+    public float baseSpinSpeed = 1.5f;
+    
     Vector3 targetPosition;
     bool alreadyMoving = false;
     bool readyToRun = false;
     float lerpDuration = 0.5f;
+    HangryController hc;
+
     bool _beingGrabbed = false;
     public bool beingGrabbed
     {
@@ -34,6 +38,36 @@ public class ToddlerController : MonoBehaviour
         }
     }
 
+
+    float spinSpeed
+    {
+        get
+        {
+            return baseSpinSpeed + 4 * hangryRatio;
+        }
+    }
+
+    float turnSpeed
+    {
+        get
+        {
+            return baseTurnSpeed + 3 * hangryRatio;
+        }
+    }
+
+    float runSpeed
+    {
+        get
+        {
+            return baseRunSpeed + 4 * hangryRatio;
+        }
+    }
+
+    float hangryRatio
+    {
+        get { return (hc.getHangryLevel() / hc.maxHangry);  }
+    }
+
     enum TAction
     {
         Spin,
@@ -44,6 +78,7 @@ public class ToddlerController : MonoBehaviour
 
     private void Awake()
     {
+        hc = GetComponent<HangryController>();
         targetPosition = getRandomPositionNearToddler();
         beingGrabbed = false;
     }
@@ -126,10 +161,10 @@ public class ToddlerController : MonoBehaviour
 
         var duration = distance / runSpeed;
 
-        var timePassed = 0f;
-        while (timePassed < duration)
+        var timeElapsed = 0f;
+        while (timeElapsed < duration)
         {
-            var factor = timePassed / duration;
+            var factor = timeElapsed / duration;
 
             factor = 1 - Mathf.Pow(1 - factor, 3);
             factor *= factor; //Mathf.SmoothStep(0, 1, factor);
@@ -138,7 +173,7 @@ public class ToddlerController : MonoBehaviour
 
             yield return null;
 
-            timePassed += Time.deltaTime;
+            timeElapsed += Time.deltaTime;
         }
 
         transform.position = targetPos;
@@ -163,12 +198,14 @@ public class ToddlerController : MonoBehaviour
     private IEnumerator TurnTowardTarget(Vector3 targetPos)
     {
         print("Turning");
-        float timeElapsed = 0;
+        
         Quaternion startRotation = transform.rotation;
         Vector3 direction = (targetPos - transform.position).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
-        while (timeElapsed < lerpDuration) {
+        var duration = 1 / turnSpeed;
+        float timeElapsed = 0;
+        while (timeElapsed < duration) {
             transform.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / lerpDuration);
             timeElapsed += Time.deltaTime;
             yield return null;
@@ -178,6 +215,17 @@ public class ToddlerController : MonoBehaviour
 
         readyToRun = true;
         alreadyMoving = false;
+    }
+
+    private IEnumerator Stomp()
+    {
+        float v = 0;
+        while (v < 1.0)
+        {
+           // timeElapsed
+        }
+
+        yield return null;
     }
 
     private void OnDrawGizmos()
