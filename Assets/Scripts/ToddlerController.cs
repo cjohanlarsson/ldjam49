@@ -114,12 +114,9 @@ public class ToddlerController : MonoBehaviour
         Jump
     }
 
-    public static ToddlerController Current { get; private set; }
-
+    
     private void Awake()
     {
-        Current = this;
-
         hc = GetComponent<HangryController>();
         characterController = GetComponent<CharacterController>();
         targetPosition = getRandomPositionNearToddler();
@@ -134,8 +131,6 @@ public class ToddlerController : MonoBehaviour
 
 	private void OnDestroy()
 	{
-        if (Current == this)
-            Current = null;
 	}
 
 	// Start is called before the first frame update

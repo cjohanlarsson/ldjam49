@@ -5,13 +5,13 @@ using System;
 public class HangryMeter : MonoBehaviour
 {
     [SerializeField] Image hangryRedLevel;
-
+	[SerializeField] HangryController toddlerToWatch;
 
 	private void Start()
 	{
-		if( HangryController.Current != null)
+		if(toddlerToWatch != null)
 		{
-			HangryController.Current.OnMeterChanged += setHangryRedLevel;
+			toddlerToWatch.OnMeterChanged += setHangryRedLevel;
 		}
 	}
 
