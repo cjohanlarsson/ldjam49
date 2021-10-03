@@ -86,10 +86,13 @@ MonoBehaviour:
   maxSpeedReverse: -5
   angularSpeed: 240
   acceleration: 10
+  moveMaxBounds: 4
   grabAnchor: {fileID: 7443901258596525241}
-  grabRadius: 0.4
+  grabRadius: 0.5
   grabDuration: 0.5
   grabCooldown: 0.5
+  grabOffsetHeight: 0.5
+  grabMaxBounds: 3.5
   fingers:
   - {fileID: 7443901259250505858}
   - {fileID: 7443901257472174329}
