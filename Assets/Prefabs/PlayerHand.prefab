@@ -63,6 +63,17 @@ MonoBehaviour:
   - {fileID: 7443901257472174329}
   - {fileID: 7443901258207649207}
   - {fileID: 7443901258347277185}
+  giggles:
+  - {fileID: 8300000, guid: f4af74c07d95a4536b9370d902c84d06, type: 3}
+  - {fileID: 8300000, guid: d005d046e1b6f4ffdaa819366118ca55, type: 3}
+  - {fileID: 8300000, guid: 67123db30f81d454abb7b7414ed331c3, type: 3}
+  - {fileID: 8300000, guid: 36cad9bbb8dc24d898cce0d717e9dbd1, type: 3}
+  - {fileID: 8300000, guid: 4e2870333c15c42cda69a73897aba079, type: 3}
+  - {fileID: 8300000, guid: 497d57ad7d62040459e9756c1881c9e3, type: 3}
+  - {fileID: 8300000, guid: 61a6049b049134763b09341e9f604ee6, type: 3}
+  - {fileID: 8300000, guid: 2fd99bde54eed458db79c8bb9ba949d0, type: 3}
+  - {fileID: 8300000, guid: a6a28329cc4fe400b91717cbf615601c, type: 3}
+  points: []
 --- !u!1 &7443901257359710956
 GameObject:
   m_ObjectHideFlags: 0
