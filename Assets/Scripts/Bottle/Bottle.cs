@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bottle : MonoBehaviour
 {
-
+	[Header("Audio")]
 	[SerializeField] AudioClip bottleSpawn;
 	[SerializeField] AudioClip bottleDrink;
 
