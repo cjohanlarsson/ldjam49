@@ -6,6 +6,10 @@ public class ToddlerController : MonoBehaviour
 {
     public float runSpeed = 2.0f;
     public float turnSpeed = 100.0f;
+    [Range(0.0f, 1.0f)]
+    public float spinningQuotient = 0.314f;
+    [Range(1.0f, 3.5f)]
+    public float spinSpeed = 2.5f;
     Vector3 targetPosition;
     bool alreadyMoving = false;
     bool readyToRun = false;
@@ -32,10 +36,10 @@ public class ToddlerController : MonoBehaviour
 
     enum TAction
     {
-        spin,
-        tantrum,
-        runTowardTarget,
-        turnTowardTarget
+        Spin,
+        Tantrum,
+        RunTowardTarget,
+        TurnTowardTarget
     }
 
     private void Awake()
@@ -73,16 +77,19 @@ public class ToddlerController : MonoBehaviour
                 TAction nextAction = (TAction)index;
                 switch (nextAction)
                 {
-                    case TAction.runTowardTarget:
+                    case TAction.RunTowardTarget:
                         alreadyMoving = false;
                         break;
-                    case TAction.spin:
-                        StartCoroutine(Spin(UnityEngine.Random.Range(1.0f, 2.0f)));
+                    case TAction.Spin:
+                        if (UnityEngine.Random.value < spinningQuotient)
+                        {
+                            StartCoroutine(Spin(UnityEngine.Random.Range(1.0f, 2.0f)));
+                        } else { alreadyMoving = false; }
                         break;
-                    case TAction.tantrum:
+                    case TAction.Tantrum:
                         alreadyMoving = false;
                         break;
-                    case TAction.turnTowardTarget:
+                    case TAction.TurnTowardTarget:
                         targetPosition = getRandomPositionNearToddler();
                         StartCoroutine(TurnTowardTarget(targetPosition));
                         break;
@@ -144,7 +151,7 @@ public class ToddlerController : MonoBehaviour
 
         while (Time.realtimeSinceStartup < endTime)
         {
-            transform.Rotate(new Vector3(0, 1.0f, 0));
+            transform.Rotate(new Vector3(0, 1.0f * spinSpeed, 0));
             yield return null;
         }
 
@@ -175,21 +182,5 @@ public class ToddlerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(targetPosition, 0.3f);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-
-            beingGrabbed = true;
-            alreadyMoving = false;
-            StopAllCoroutines();
-        
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-
-            beingGrabbed = false;
-        
     }
 }
