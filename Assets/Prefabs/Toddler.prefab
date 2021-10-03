@@ -767,6 +767,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8803fd3a5b30c48e19dd53cf4d181ac7, type: 3}
   - {fileID: 8300000, guid: 7fcc0370bfa4e4d45894029160ad7a10, type: 3}
   - {fileID: 8300000, guid: cf729940cd7e942f9a5b44fb020c6a33, type: 3}
+  tantrumSFX: {fileID: 8300000, guid: 1e3d157c5d7394c7b90da6139fb2e523, type: 3}
 --- !u!114 &650929278
 MonoBehaviour:
   m_ObjectHideFlags: 0

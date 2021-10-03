@@ -31,7 +31,7 @@ public class ToddlerController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
     private AudioClip step;
-    
+    [SerializeField] AudioClip tantrumSFX;
 
     Vector3 targetPosition;
     bool alreadyMoving = false;
@@ -39,8 +39,7 @@ public class ToddlerController : MonoBehaviour
     bool readyToRun = false;
     float lerpDuration = 0.5f;
     float startYPos;
-    int stepCount = 0;
-
+    
     HangryController hc;
     CharacterController characterController;
 
@@ -358,7 +357,9 @@ public class ToddlerController : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
+        AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
         loseScreen.SetActive(true);
+        
     }
 
     private void OnDrawGizmos()
