@@ -119,7 +119,12 @@ public class PlayerHand : MonoBehaviour
 				break;
 
 			case GrabState.Grabbed:
-
+				if (grabbedObject == null)
+                {
+					this.grabState = GrabState.Cooldown;
+					return;
+                }
+				
 				shouldHandBeClosed = true;
 				if (this.timeSinceLastGrabState > this.grabDuration || !isGrabKeyHeld)
 				{

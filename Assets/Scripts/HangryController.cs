@@ -36,6 +36,11 @@ public class HangryController : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
+        BottleManager.Current.OnScoreChanged += (s) =>
+        {
+            resetHangry();
+        };
+
         StartCoroutine(hangryTimer());
     }
 
@@ -67,6 +72,17 @@ public class HangryController : MonoBehaviour
     public void makeSuperHangry()
     {
         Hangriness += 20;
+    }
+
+
+    public void reduceHangry()
+    {
+        Hangriness -= 10;
+    }
+
+    public void reduceHangryAlot()
+    {
+        Hangriness -= 25;
     }
 
     public void resetHangry()
