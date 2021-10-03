@@ -217,7 +217,17 @@ public class PlayerHand : MonoBehaviour
 		this.transform.position += displacement;
 
 		if (this.grabbedObject != null)
-			this.grabbedObject.transform.position += displacement;
+		{
+			var cc = this.grabbedObject.GetComponent<CharacterController>();
+			if (cc != null)
+			{
+				cc.Move(displacement);
+			}
+			else
+			{
+				this.grabbedObject.transform.position += displacement;
+			}
+		}
 	}
 
 	private void OnDrawGizmos()
