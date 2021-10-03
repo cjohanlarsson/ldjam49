@@ -30,7 +30,6 @@ public class ToddlerController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
-    private AudioClip step;
     [SerializeField] AudioClip tantrumSFX;
 
     Vector3 targetPosition;
@@ -201,6 +200,9 @@ public class ToddlerController : MonoBehaviour
         UpdateLegs();
     }
 
+    int stepsMade = 0;
+    float prevLerp = -1.0f;
+
     void UpdateLegs()
 	{
 
@@ -211,11 +213,25 @@ public class ToddlerController : MonoBehaviour
             {
                 lerp = 0.5f;
             }
+            else
+			{
+                if( (this.prevLerp < 0.5f && lerp >= 0.5f) || (this.prevLerp > 0.5f && lerp <= 0.5f) )
+				{
+                    PlayStepSound();
+				}
+                this.prevLerp = lerp;
+			}
             float angle = Mathf.Lerp(-1 * this.legRange, this.legRange, lerp);
 
             this.leftLeg.localEulerAngles = new Vector3(angle, 0, 0);
             this.rightLeg.localEulerAngles = new Vector3(-1 * angle, 0, 0);
         }
+	}
+
+    void PlayStepSound()
+	{
+        if(this.steps.Length > 0)
+            AudioSource.PlayClipAtPoint(this.steps[this.stepsMade++ % this.steps.Length], this.transform.position);
 	}
 
 
