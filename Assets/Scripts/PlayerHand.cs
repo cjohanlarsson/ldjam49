@@ -35,8 +35,10 @@ public class PlayerHand : MonoBehaviour
 	
 	[Header("Audio")]
 	[SerializeField] AudioClip[] giggles;
+	[SerializeField] AudioClip[] points;
 	private AudioSource audioSource;
 	private AudioClip giggle;
+	private AudioClip point;
 
 	Collider[] colliders = new Collider[16];
 	float speed = 0.0f;
