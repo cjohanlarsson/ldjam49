@@ -7,7 +7,15 @@ public class HangryMeter : MonoBehaviour
     [SerializeField] Image hangryRedLevel;
 
 
-    public void setHangryRedLevel(float hangryAmount, float maxHangry = 100.0f)
+	private void Start()
+	{
+		if( HangryController.Current != null)
+		{
+			HangryController.Current.OnMeterChanged += setHangryRedLevel;
+		}
+	}
+
+	public void setHangryRedLevel(float hangryAmount, float maxHangry = 100.0f)
     {
         hangryAmount = Mathf.Min(hangryAmount, maxHangry);
         hangryRedLevel.fillAmount = hangryAmount / maxHangry;

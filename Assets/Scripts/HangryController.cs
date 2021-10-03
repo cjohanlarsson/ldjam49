@@ -4,23 +4,37 @@ using UnityEngine;
 
 public class HangryController : MonoBehaviour
 {
+    public static HangryController Current { get; private set; }
+    public event System.Action<float, float> OnMeterChanged;
+
     [SerializeField] float hangryRateOfIncrease = 1.0f;
     [SerializeField] public float maxHangry = 50.0f;
     [SerializeField] float _hangryLevel = 0;
-    [SerializeField] HangryMeter hangryMeter;
-
+    
     private float Hangriness
     {
         get { return _hangryLevel; }
         set
         {
             _hangryLevel = value;
-            hangryMeter.setHangryRedLevel(_hangryLevel, maxHangry);
+            if(OnMeterChanged != null)
+                OnMeterChanged(_hangryLevel, maxHangry);
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+	private void Awake()
+	{
+        Current = this;
+	}
+
+	private void OnDestroy()
+	{
+        if (Current == this)
+            Current = null;
+	}
+
+	// Start is called before the first frame update
+	void Start()
     {
         StartCoroutine(hangryTimer());
     }

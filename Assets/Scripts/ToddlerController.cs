@@ -5,19 +5,31 @@ using UnityEngine;
 [RequireComponent(typeof(HangryController))]
 public class ToddlerController : MonoBehaviour
 {
+
     public float baseRunSpeed = 2.0f;
     public float baseTurnSpeed = 1.0f;
     [Range(0.0f, 1.0f)]
     public float spinningQuotient = 0.314f;
     [Range(1.0f, 3.5f)]
     public float baseSpinSpeed = 1.5f;
-    
+
+    [SerializeField] private float movementRadius = 5.0f;
+    [SerializeField] private float maxMovementDuration = 3.0f;
+    [SerializeField] private PhysicsBaby physicsBabyPrefab = null;
+    [SerializeField] private Rigidbody hipRootRigidbody = null;
+    [SerializeField] private Transform leftLeg = null;
+    [SerializeField] private Transform rightLeg = null;
+    [SerializeField] private float legRange = 25.0f;
+    [SerializeField] private float legSpeed = 4.0f;
+
+
     Vector3 targetPosition;
     bool alreadyMoving = false;
+    bool isMoving = false;
     bool readyToRun = false;
     float lerpDuration = 0.5f;
     HangryController hc;
-    Rigidbody rb;
+    CharacterController characterController;
 
     bool _beingGrabbed = false;
     public bool beingGrabbed
@@ -27,6 +39,7 @@ public class ToddlerController : MonoBehaviour
         {
             _beingGrabbed = value;
             if (_beingGrabbed) { alreadyMoving = false; }
+            isMoving = false;
             StopAllCoroutines();
         }
     }
@@ -77,16 +90,32 @@ public class ToddlerController : MonoBehaviour
         TurnTowardTarget
     }
 
+    public static ToddlerController Current { get; private set; }
+
     private void Awake()
     {
+        Current = this;
+
         hc = GetComponent<HangryController>();
-        rb = GetComponent<Rigidbody>();
+        characterController = GetComponent<CharacterController>();
         targetPosition = getRandomPositionNearToddler();
         beingGrabbed = false;
+
+        if (physicsBabyPrefab != null)
+        {
+            var pb = Instantiate(physicsBabyPrefab);
+            pb.hipJoint.connectedBody = this.hipRootRigidbody;
+        }
     }
 
-    // Start is called before the first frame update
-    void Start()
+	private void OnDestroy()
+	{
+        if (Current == this)
+            Current = null;
+	}
+
+	// Start is called before the first frame update
+	void Start()
     {
         
     }
@@ -135,25 +164,51 @@ public class ToddlerController : MonoBehaviour
                 }
             }
         }
+
+        UpdateLegs();
     }
+
+    void UpdateLegs()
+	{
+
+        if (this.leftLeg != null && this.rightLeg != null)
+        {
+            float lerp = Mathf.Abs(Mathf.Sin(Time.time * Mathf.PI * this.legSpeed));
+            if (!isMoving)
+            {
+                lerp = 0.5f;
+            }
+            float angle = Mathf.Lerp(-1 * this.legRange, this.legRange, lerp);
+
+            this.leftLeg.localEulerAngles = new Vector3(angle, 0, 0);
+            this.rightLeg.localEulerAngles = new Vector3(-1 * angle, 0, 0);
+        }
+	}
 
 
     Vector3 getRandomPositionNearToddler() {
-        float randX = transform.position.x + UnityEngine.Random.Range(-10.0f, 10.0f);
-        float randZ = transform.position.y + UnityEngine.Random.Range(-10.0f, 10.0f);
+        float randX = UnityEngine.Random.Range(-movementRadius, movementRadius);
+        float randZ = UnityEngine.Random.Range(-movementRadius, movementRadius);
         Vector3 target = new Vector3(randX, transform.position.y, randZ);
         return target;
     }
 
     private IEnumerator MoveTowardTarget(Vector3 targetPos)
     {
-        print("physicbaby!");
-        Vector3 direction = (targetPos - transform.position).normalized;
-        rb.AddForce(direction * 100, ForceMode.Impulse);
-        while(rb.velocity.sqrMagnitude > 1f)
+        this.isMoving = true;
+        var startTime = Time.time;
+        while ((Time.time - startTime) < this.maxMovementDuration)
         {
+            Vector3 direction = (targetPos - transform.position);
+            direction.y = 0.0f;
+            if (direction.sqrMagnitude < 0.01f)
+                break;
+
+            direction.Normalize();
+            characterController.SimpleMove(direction * this.runSpeed);
             yield return null;
         }
+        this.isMoving = false;
         alreadyMoving = false;
     }
 
