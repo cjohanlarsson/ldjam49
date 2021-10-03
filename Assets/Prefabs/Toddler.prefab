@@ -757,6 +757,16 @@ MonoBehaviour:
   rightLeg: {fileID: 4938604284590192047}
   legRange: 25
   legSpeed: 4
+  steps:
+  - {fileID: 8300000, guid: b14c9022db3384883b2147b622051890, type: 3}
+  - {fileID: 8300000, guid: a7376fc0792104cbd88e4b738df1cb42, type: 3}
+  - {fileID: 8300000, guid: 1c563270d11714b838ccb396b1b889ed, type: 3}
+  - {fileID: 8300000, guid: 354c7bbcb8e3b4c9cb771ac3004dc355, type: 3}
+  - {fileID: 8300000, guid: 6efe4b7a47afb426a9f7a71d54dac2b5, type: 3}
+  - {fileID: 8300000, guid: f7040f246e3644e58835e9186b189239, type: 3}
+  - {fileID: 8300000, guid: 8803fd3a5b30c48e19dd53cf4d181ac7, type: 3}
+  - {fileID: 8300000, guid: 7fcc0370bfa4e4d45894029160ad7a10, type: 3}
+  - {fileID: 8300000, guid: cf729940cd7e942f9a5b44fb020c6a33, type: 3}
 --- !u!114 &650929278
 MonoBehaviour:
   m_ObjectHideFlags: 0

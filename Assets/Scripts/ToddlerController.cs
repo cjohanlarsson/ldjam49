@@ -27,6 +27,9 @@ public class ToddlerController : MonoBehaviour
     [SerializeField] private float legRange = 25.0f;
     [SerializeField] private float legSpeed = 4.0f;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip[] steps;
+    private AudioClip step;
 
     Vector3 targetPosition;
     bool alreadyMoving = false;
@@ -34,6 +37,7 @@ public class ToddlerController : MonoBehaviour
     bool readyToRun = false;
     float lerpDuration = 0.5f;
     float startYPos;
+    int stepCount = 0;
 
     HangryController hc;
     CharacterController characterController;
