@@ -21,6 +21,7 @@ public class ToddlerManager : MonoBehaviour
 {
 	[SerializeField] ToddlerController prefabToSpawn;
 	[SerializeField] GameObject loseScreen;
+	[SerializeField] float spawnRadius = 2.0f;
 
 	List<ToddlerController> toddlers = new List<ToddlerController>();
 
@@ -45,8 +46,8 @@ public class ToddlerManager : MonoBehaviour
 		for (int i=0; i < num ; ++i)
 		{
 			var spawnPoint = Vector2.up;
-			spawnPoint.Rotate(i * (360.0f / (float)num));
-			toddlers.Add( Instantiate(this.prefabToSpawn, new Vector3(spawnPoint.x, 0, spawnPoint.y), Quaternion.identity) );
+			spawnPoint = spawnPoint.Rotate(i * (360.0f / (float)num));
+			toddlers.Add( Instantiate(this.prefabToSpawn, spawnRadius * new Vector3(spawnPoint.x, 0, spawnPoint.y), Quaternion.identity) );
 		}
 	}
 

@@ -4,14 +4,20 @@ using System.ComponentModel.DataAnnotations;
 using System;
 public class HangryMeter : MonoBehaviour
 {
-    [SerializeField] Image hangryRedLevel;
-	[SerializeField] HangryController toddlerToWatch;
+    [SerializeField] Image hangryRedLevel = null;
 
-	private void Start()
+	private HangryController _toddlerToWatch = null;
+	public HangryController toddlerToWatch
 	{
-		if(toddlerToWatch != null)
+		set
 		{
-			toddlerToWatch.OnMeterChanged += setHangryRedLevel;
+			if(_toddlerToWatch != null)
+			{
+				_toddlerToWatch.OnMeterChanged -= setHangryRedLevel;
+			}
+			_toddlerToWatch = value;
+			_toddlerToWatch.OnMeterChanged += setHangryRedLevel;
+			setHangryRedLevel(_toddlerToWatch.Hangriness, _toddlerToWatch.maxHangry);
 		}
 	}
 

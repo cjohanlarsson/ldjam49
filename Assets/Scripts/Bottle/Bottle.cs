@@ -20,6 +20,7 @@ public class Bottle : MonoBehaviour
 			AudioSource.PlayClipAtPoint(bottleDrink, this.transform.position);
 			GameObject.Destroy(this.gameObject);
 			BottleManager.Current.AddScore(1);
+			other.GetComponent<HangryController>().resetHangry();
 		}
 	}
 }

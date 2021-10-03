@@ -13,10 +13,10 @@ public class HangryController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip[] hangrySounds;
     
-    private float Hangriness
+    public float Hangriness
     {
         get { return _hangryLevel; }
-        set
+        private set
         {
             _hangryLevel = value;
             if(OnMeterChanged != null)
@@ -35,11 +35,6 @@ public class HangryController : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        BottleManager.Current.OnScoreChanged += (s) =>
-        {
-            resetHangry();
-        };
-
         StartCoroutine(hangryTimer());
     }
 

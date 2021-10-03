@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8633889598056554126}
   m_Layer: 0
-  m_Name: ToddlerHangryMeter
+  m_Name: ToddlerUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hangryRedLevel: {fileID: 2017074309169347109}
-  toddlerToWatch: {fileID: 0}
 --- !u!1 &6007306573656837063
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +193,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.258, y: 0.912}
   m_SizeDelta: {x: 16, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7461298018804520257

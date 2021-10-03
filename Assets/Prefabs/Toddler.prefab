@@ -750,7 +750,6 @@ MonoBehaviour:
   jumpingQuotient: 0.6
   baseSpinSpeed: 1.5
   baseJumpSpeed: 4
-  loseScreen: {fileID: 0}
   movementRadius: 4
   maxMovementDuration: 3
   physicsBabyPrefab: {fileID: 1142495205010277591, guid: 2ec0fb5249f1aaf429b2e2cd7c6cf95e, type: 3}
@@ -759,6 +758,7 @@ MonoBehaviour:
   rightLeg: {fileID: 4938604284590192047}
   legRange: 25
   legSpeed: 4
+  toddlerUIPrefab: {fileID: 5096384739714481625, guid: 20f7b4a8ddd0b8f4686864cd7a078b14, type: 3}
   steps:
   - {fileID: 8300000, guid: b14c9022db3384883b2147b622051890, type: 3}
   - {fileID: 8300000, guid: a7376fc0792104cbd88e4b738df1cb42, type: 3}

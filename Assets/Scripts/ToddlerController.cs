@@ -26,6 +26,7 @@ public class ToddlerController : MonoBehaviour
     [SerializeField] private Transform rightLeg = null;
     [SerializeField] private float legRange = 25.0f;
     [SerializeField] private float legSpeed = 4.0f;
+    [SerializeField] private GameObject toddlerUIPrefab;
 
     [Header("Audio")]
     [SerializeField] AudioClip[] steps;
@@ -42,6 +43,8 @@ public class ToddlerController : MonoBehaviour
 
     HangryController hc;
     CharacterController characterController;
+    GameObject toddlerUI;
+
 
     bool _beingGrabbed = false;
     public bool beingGrabbed
@@ -127,11 +130,7 @@ public class ToddlerController : MonoBehaviour
         targetPosition = getRandomPositionNearToddler();
         beingGrabbed = false;
 
-        if (physicsBabyPrefab != null)
-        {
-            var pb = Instantiate(physicsBabyPrefab);
-            pb.hipJoint.connectedBody = this.hipRootRigidbody;
-        }
+        
     }
 
     private void OnDestroy()
@@ -142,7 +141,15 @@ public class ToddlerController : MonoBehaviour
     void Start()
     {
         startYPos = transform.position.y;
-    }
+		if (physicsBabyPrefab != null)
+		{
+			var pb = Instantiate(physicsBabyPrefab);
+			pb.hipJoint.connectedBody = this.hipRootRigidbody;
+		}
+
+		this.toddlerUI = Instantiate(toddlerUIPrefab, this.transform.position, Quaternion.identity);
+		this.toddlerUI.GetComponentInChildren<HangryMeter>().toddlerToWatch = this.GetComponent<HangryController>();
+	}
 
     void Update()
     {
@@ -200,7 +207,13 @@ public class ToddlerController : MonoBehaviour
         UpdateLegs();
     }
 
-    int stepsMade = 0;
+	private void LateUpdate()
+	{
+        toddlerUI.transform.position = this.transform.position;
+
+    }
+
+	int stepsMade = 0;
     float prevLerp = -1.0f;
 
     void UpdateLegs()
