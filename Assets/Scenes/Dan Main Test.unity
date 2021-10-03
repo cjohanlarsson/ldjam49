@@ -1175,6 +1175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Toddler
       objectReference: {fileID: 0}
+    - target: {fileID: 9180034193493357149, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
+      propertyPath: jumpingQuotient
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3e4a384b75504bb08376ba15a0a9cb2, type: 3}
 --- !u!1 &1681377965
