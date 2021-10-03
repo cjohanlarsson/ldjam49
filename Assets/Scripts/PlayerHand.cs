@@ -35,10 +35,7 @@ public class PlayerHand : MonoBehaviour
 	
 	[Header("Audio")]
 	[SerializeField] AudioClip[] giggles;
-	[SerializeField] AudioClip[] points;
-	private AudioSource audioSource;
 	private AudioClip giggle;
-	private AudioClip point;
 
 	Collider[] colliders = new Collider[16];
 	float speed = 0.0f;
@@ -63,7 +60,7 @@ public class PlayerHand : MonoBehaviour
 
 	void Start()
 	{
-		audioSource = this.GetComponent<AudioSource>();
+		
 	}
 
 	private void Update()
@@ -104,8 +101,7 @@ public class PlayerHand : MonoBehaviour
                         {
 							grabbedObject.GetComponent<ToddlerController>().beingGrabbed = true;
 							giggle = giggles[grabCount];
-							audioSource.clip = giggle;
-							audioSource.Play();
+							AudioSource.PlayClipAtPoint(giggle, this.transform.position);
 							if(grabCount < giggles.Length - 1)
                             {
 								grabCount++;
