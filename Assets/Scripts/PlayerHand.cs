@@ -35,7 +35,9 @@ public class PlayerHand : MonoBehaviour
 	
 	[Header("Audio")]
 	[SerializeField] AudioClip[] giggles;
-	private AudioClip giggle;
+
+	[Header("Animations")]
+	[SerializeField] Animator handAnimator;
 
 	Collider[] colliders = new Collider[16];
 	float speed = 0.0f;
@@ -60,7 +62,6 @@ public class PlayerHand : MonoBehaviour
 
 	void Start()
 	{
-		
 	}
 
 	private void Update()
@@ -94,25 +95,30 @@ public class PlayerHand : MonoBehaviour
 				else if (prevTimeSinceLastGrabState < GRAB_WINDOW && GRAB_WINDOW <= this.timeSinceLastGrabState)
 				{
 					int amount = Physics.OverlapSphereNonAlloc(this.grabAnchor.position, this.grabRadius, colliders);
-					if (amount > 0)
+					for(int i=0; i < amount; ++i)
 					{
-						grabbedObject = this.colliders[0].gameObject;
-						if(grabbedObject.name == "Toddler")
-                        {
-							grabbedObject.GetComponent<ToddlerController>().beingGrabbed = true;
-							giggle = giggles[grabCount];
-							AudioSource.PlayClipAtPoint(giggle, this.transform.position);
-							if(grabCount < giggles.Length - 1)
-                            {
-								grabCount++;
+						var go = this.colliders[i].gameObject;
+						bool shouldGrabThisGo = false;
+						
+						var toddler = go.GetComponent<ToddlerController>();
+						if (toddler != null)
+						{
+							toddler.beingGrabbed = true;
+							if (this.giggles.Length > 0)
+							{
+								var giggle = this.giggles[grabCount % giggles.Length];
+								AudioSource.PlayClipAtPoint(giggle, this.transform.position);
 							}
-							else
-                            {
-								grabCount = 0;
-							}
+							grabCount++;
+							shouldGrabThisGo = true;
 						}
-						this.grabState = GrabState.Grabbed;
-						this.timeSinceLastGrabState = 0.0f;
+
+						if(shouldGrabThisGo)
+						{
+							this.grabbedObject = go;
+							this.grabState = GrabState.Grabbed;
+							this.timeSinceLastGrabState = 0.0f;
+						}
 					}
 				}
 
@@ -128,9 +134,10 @@ public class PlayerHand : MonoBehaviour
 				shouldHandBeClosed = true;
 				if (this.timeSinceLastGrabState > this.grabDuration || !isGrabKeyHeld)
 				{
-					if (grabbedObject.name == "Toddler")
+					var toddler = this.grabbedObject.GetComponent<ToddlerController>();
+					if (toddler != null)
 					{
-						grabbedObject.GetComponent<ToddlerController>().beingGrabbed = false;
+						toddler.beingGrabbed = false;
 					}
 					this.grabbedObject = null;
 					this.grabState = GrabState.Cooldown;
@@ -155,6 +162,8 @@ public class PlayerHand : MonoBehaviour
 		{
 			fingerLerp = Mathf.MoveTowards(fingerLerp, 0, Time.deltaTime * 2.0f);
 		}
+
+		handAnimator.SetBool("IsClosed", shouldHandBeClosed);
 
 		foreach (var finger in this.fingers)
 		{
@@ -208,7 +217,17 @@ public class PlayerHand : MonoBehaviour
 		this.transform.position += displacement;
 
 		if (this.grabbedObject != null)
-			this.grabbedObject.transform.position += displacement;
+		{
+			var cc = this.grabbedObject.GetComponent<CharacterController>();
+			if (cc != null)
+			{
+				cc.Move(displacement);
+			}
+			else
+			{
+				this.grabbedObject.transform.position += displacement;
+			}
+		}
 	}
 
 	private void OnDrawGizmos()
