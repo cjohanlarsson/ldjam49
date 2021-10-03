@@ -17,6 +17,7 @@ public class ToddlerController : MonoBehaviour
     bool readyToRun = false;
     float lerpDuration = 0.5f;
     HangryController hc;
+    Rigidbody rb;
 
     bool _beingGrabbed = false;
     public bool beingGrabbed
@@ -79,6 +80,7 @@ public class ToddlerController : MonoBehaviour
     private void Awake()
     {
         hc = GetComponent<HangryController>();
+        rb = GetComponent<Rigidbody>();
         targetPosition = getRandomPositionNearToddler();
         beingGrabbed = false;
     }
@@ -103,8 +105,10 @@ public class ToddlerController : MonoBehaviour
                 }
                 else
                 {
-                    StartCoroutine(MoveToTarget(targetPosition));
+                    StartCoroutine(MoveTowardTarget(targetPosition));
+                    //StartCoroutine(MoveToTarget(targetPosition));
                 }
+                
             }
             else
             {
@@ -139,6 +143,18 @@ public class ToddlerController : MonoBehaviour
         float randZ = transform.position.y + UnityEngine.Random.Range(-10.0f, 10.0f);
         Vector3 target = new Vector3(randX, transform.position.y, randZ);
         return target;
+    }
+
+    private IEnumerator MoveTowardTarget(Vector3 targetPos)
+    {
+        print("physicbaby!");
+        Vector3 direction = (targetPos - transform.position).normalized;
+        rb.AddForce(direction * 100, ForceMode.Impulse);
+        while(rb.velocity.sqrMagnitude > 1f)
+        {
+            yield return null;
+        }
+        alreadyMoving = false;
     }
 
     private IEnumerator MoveToTarget(Vector3 targetPos)
