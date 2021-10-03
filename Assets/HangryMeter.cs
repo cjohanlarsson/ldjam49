@@ -18,6 +18,7 @@ public class HangryMeter : MonoBehaviour
 	public void setHangryRedLevel(float hangryAmount, float maxHangry = 100.0f)
     {
         hangryAmount = Mathf.Min(hangryAmount, maxHangry);
-        hangryRedLevel.fillAmount = hangryAmount / maxHangry;
+		hangryRedLevel.fillAmount = hangryAmount / maxHangry;
+		hangryRedLevel.color = Color.Lerp(Color.yellow, Color.red, hangryRedLevel.fillAmount);
     }
 }

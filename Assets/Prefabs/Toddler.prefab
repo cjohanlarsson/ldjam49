@@ -746,7 +746,9 @@ MonoBehaviour:
   baseRunSpeed: 2
   baseTurnSpeed: 1
   spinningQuotient: 0.314
+  jumpingQuotient: 0.6
   baseSpinSpeed: 1.5
+  baseJumpSpeed: 4
   movementRadius: 4
   maxMovementDuration: 3
   physicsBabyPrefab: {fileID: 1142495205010277591, guid: 2ec0fb5249f1aaf429b2e2cd7c6cf95e, type: 3}
@@ -755,6 +757,16 @@ MonoBehaviour:
   rightLeg: {fileID: 4938604284590192047}
   legRange: 25
   legSpeed: 4
+  steps:
+  - {fileID: 8300000, guid: b14c9022db3384883b2147b622051890, type: 3}
+  - {fileID: 8300000, guid: a7376fc0792104cbd88e4b738df1cb42, type: 3}
+  - {fileID: 8300000, guid: 1c563270d11714b838ccb396b1b889ed, type: 3}
+  - {fileID: 8300000, guid: 354c7bbcb8e3b4c9cb771ac3004dc355, type: 3}
+  - {fileID: 8300000, guid: 6efe4b7a47afb426a9f7a71d54dac2b5, type: 3}
+  - {fileID: 8300000, guid: f7040f246e3644e58835e9186b189239, type: 3}
+  - {fileID: 8300000, guid: 8803fd3a5b30c48e19dd53cf4d181ac7, type: 3}
+  - {fileID: 8300000, guid: 7fcc0370bfa4e4d45894029160ad7a10, type: 3}
+  - {fileID: 8300000, guid: cf729940cd7e942f9a5b44fb020c6a33, type: 3}
 --- !u!114 &650929278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -770,6 +782,10 @@ MonoBehaviour:
   hangryRateOfIncrease: 1
   maxHangry: 50
   _hangryLevel: 0
+  hangrySounds:
+  - {fileID: 8300000, guid: 049bd4b27c9934077a39431ff3a6de14, type: 3}
+  - {fileID: 8300000, guid: 04bc81ff43e0744459a2069f34462a35, type: 3}
+  - {fileID: 8300000, guid: 19fc6182a81b54e6c804caa82d1cbbe3, type: 3}
 --- !u!143 &8891375186545217324
 CharacterController:
   m_ObjectHideFlags: 0
