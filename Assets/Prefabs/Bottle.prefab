@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bottleSpawn: {fileID: 8300000, guid: 4a642e7eec229409ebd61b05fbe38961, type: 3}
-  bottleDrink: {fileID: 8300000, guid: 5eb3d5856878a4d529a19b319243ecf7, type: 3}
+  bottleDrink: {fileID: 8300000, guid: b7130ed46e89d4cd59e4e99593f34114, type: 3}
 --- !u!54 &5509902562900346197
 Rigidbody:
   m_ObjectHideFlags: 0
