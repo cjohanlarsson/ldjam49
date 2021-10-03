@@ -20,6 +20,24 @@ public static class Vector2Ex
 public class ToddlerManager : MonoBehaviour
 {
 	[SerializeField] ToddlerController prefabToSpawn;
+	[SerializeField] GameObject loseScreen;
+
+	List<ToddlerController> toddlers = new List<ToddlerController>();
+
+	public bool IsGameOver
+	{
+		get
+		{
+			foreach(var t in toddlers)
+			{
+				if(t.HasThrownTantrum)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
 	private void Awake()
 	{
@@ -28,7 +46,12 @@ public class ToddlerManager : MonoBehaviour
 		{
 			var spawnPoint = Vector2.up;
 			spawnPoint.Rotate(i * (360.0f / (float)num));
-			Instantiate(this.prefabToSpawn, new Vector3(spawnPoint.x, 0, spawnPoint.y), Quaternion.identity);
+			toddlers.Add( Instantiate(this.prefabToSpawn, new Vector3(spawnPoint.x, 0, spawnPoint.y), Quaternion.identity) );
 		}
+	}
+
+	private void Update()
+	{
+		loseScreen.SetActive(IsGameOver);
 	}
 }

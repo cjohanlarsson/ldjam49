@@ -17,8 +17,7 @@ public class ToddlerController : MonoBehaviour
     [Range(1.0f, 3.5f)]
     public float baseSpinSpeed = 1.5f;
     public float baseJumpSpeed = 4.0f;
-    public GameObject loseScreen;
-
+    
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
     [SerializeField] private PhysicsBaby physicsBabyPrefab = null;
@@ -62,6 +61,8 @@ public class ToddlerController : MonoBehaviour
             StopAllCoroutines();
         }
     }
+
+    public bool HasThrownTantrum { get; private set; }
 
     bool oooSomethingElse
     {
@@ -370,6 +371,7 @@ public class ToddlerController : MonoBehaviour
 
     public void throwTantrum()
     {
+        HasThrownTantrum = true;
         audioSource.Stop();
         StopAllCoroutines();
         alreadyMoving = true;
@@ -379,7 +381,6 @@ public class ToddlerController : MonoBehaviour
         rb.isKinematic = false;
         rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
         AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
-        loseScreen.SetActive(true);
         
     }
 
