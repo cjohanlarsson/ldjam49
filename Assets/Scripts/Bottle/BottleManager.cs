@@ -16,6 +16,8 @@ public class BottleManager : MonoBehaviour
 	[SerializeField] float spawnRadius = 10.0f;
 	[SerializeField] float respawnDuration = 1.0f;
 
+	public AudioSource audioSource;
+
 	private void Awake()
 	{
 		Current = this;
@@ -26,14 +28,16 @@ public class BottleManager : MonoBehaviour
 		if (Current == this)
 			Current = null;
 	}
-	
+
 	IEnumerator Start()
 	{
-		while(true)
+		audioSource = this.GetComponent<AudioSource>();
+
+		while (true)
 		{
 			var offset = Random.insideUnitCircle * this.spawnRadius;
 			var bottle = Instantiate(bottlePrefab.gameObject, this.transform.position + new Vector3(offset.x, 0, offset.y), Quaternion.identity);
-
+			audioSource.Play();
 			yield return new WaitUntil(() => bottle == null);
 			yield return new WaitForSeconds(this.respawnDuration);
 		}
