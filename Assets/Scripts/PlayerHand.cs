@@ -33,11 +33,16 @@ public class PlayerHand : MonoBehaviour
 	[Header("Visuals")]
 	[SerializeField] Transform[] fingers;
 	
-	
+	[Header("Audio")]
+	[SerializeField] AudioClip[] giggles;
+	private AudioSource audioSource;
+	private AudioClip giggle;
+
 	Collider[] colliders = new Collider[16];
 	float speed = 0.0f;
 	float fingerLerp = 0.0f;
 	float grabNextTimeAllowed = -666.0f;
+	int grabCount = 0;
 
 	GameObject grabbedObject = null;
 
@@ -53,6 +58,11 @@ public class PlayerHand : MonoBehaviour
 	GrabState grabState = GrabState.Idle;
 	float timeSinceLastGrabState = 0.0f;
 	#endregion
+
+	void Start()
+	{
+		audioSource = this.GetComponent<AudioSource>();
+	}
 
 	private void Update()
 	{
@@ -91,7 +101,18 @@ public class PlayerHand : MonoBehaviour
 						if(grabbedObject.name == "Toddler")
                         {
 							grabbedObject.GetComponent<ToddlerController>().beingGrabbed = true;
-                        }
+							giggle = giggles[grabCount];
+							audioSource.clip = giggle;
+							audioSource.Play();
+							if(grabCount < giggles.Length - 1)
+                            {
+								grabCount++;
+							}
+							else
+                            {
+								grabCount = 0;
+							}
+						}
 						this.grabState = GrabState.Grabbed;
 						this.timeSinceLastGrabState = 0.0f;
 					}
