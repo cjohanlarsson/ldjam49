@@ -357,7 +357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bottlePrefab: {fileID: 7691653014737534758, guid: 5528761f7e37d5b449429d16fe61093e, type: 3}
-  spawnRadius: 5
+  spawnRadius: 3
   respawnDuration: 1
 --- !u!1 &9204119030248930333
 GameObject:
