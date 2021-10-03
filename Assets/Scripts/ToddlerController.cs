@@ -130,7 +130,9 @@ public class ToddlerController : MonoBehaviour
         while (timePassed < duration)
         {
             var factor = timePassed / duration;
-            factor = Mathf.SmoothStep(0, 1, factor);
+
+            factor = 1 - Mathf.Pow(1 - factor, 3);
+            factor *= factor; //Mathf.SmoothStep(0, 1, factor);
 
             transform.position = Vector3.Lerp(startPos, targetPos, factor);
 
