@@ -1118,7 +1118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8225142548918992269, guid: 6ef44de86be561d469ecba27c5644ac7, type: 3}
       propertyPath: m_Name
-      value: Baby
+      value: PhysicsBaby
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ef44de86be561d469ecba27c5644ac7, type: 3}
