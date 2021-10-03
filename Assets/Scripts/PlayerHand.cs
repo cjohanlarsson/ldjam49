@@ -23,7 +23,8 @@ public class PlayerHand : MonoBehaviour
 	[SerializeField] float maxSpeedReverse = -2.0f;
 	[SerializeField] float angularSpeed = 90.0f;
 	[SerializeField] float acceleration = 1.5f;
-	
+	[SerializeField] float moveMaxBounds = 4.0f;
+
 	[Header("Grabs")]
 	[SerializeField] Transform grabAnchor;
 	[SerializeField] float grabRadius;
@@ -231,7 +232,10 @@ public class PlayerHand : MonoBehaviour
 		}
 		
 		
-		this.transform.position += displacement;
+		var pos = this.transform.position + displacement;
+		pos.x = Mathf.Clamp(pos.x, -1 * this.moveMaxBounds, this.moveMaxBounds);
+		pos.z = Mathf.Clamp(pos.z, -1 * this.moveMaxBounds, this.moveMaxBounds);
+		this.transform.position = pos;
 
 		if (this.grabbedObject != null)
 		{
