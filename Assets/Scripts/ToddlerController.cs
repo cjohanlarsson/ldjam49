@@ -59,7 +59,7 @@ public class ToddlerController : MonoBehaviour
     {
         get
         {
-            return baseRunSpeed + 4 * hangryRatio;
+            return baseRunSpeed + 10 * hangryRatio;
         }
     }
 
@@ -135,8 +135,8 @@ public class ToddlerController : MonoBehaviour
 
 
     Vector3 getRandomPositionNearToddler() {
-        float randX = transform.position.x + UnityEngine.Random.Range(-3.0f, 3.0f);
-        float randZ = transform.position.y + UnityEngine.Random.Range(-3.0f, 3.0f);
+        float randX = transform.position.x + UnityEngine.Random.Range(-10.0f, 10.0f);
+        float randZ = transform.position.y + UnityEngine.Random.Range(-10.0f, 10.0f);
         Vector3 target = new Vector3(randX, transform.position.y, randZ);
         return target;
     }
