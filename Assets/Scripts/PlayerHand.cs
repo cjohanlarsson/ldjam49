@@ -29,6 +29,8 @@ public class PlayerHand : MonoBehaviour
 	[SerializeField] float grabRadius;
 	[SerializeField] float grabDuration = 1.0f;
 	[SerializeField] float grabCooldown = 1.0f;
+	[SerializeField] float grabOffsetHeight = 0.5f;
+	[SerializeField] float grabMaxBounds = 3.5f;
 
 	[Header("Visuals")]
 	[SerializeField] Transform[] fingers;
@@ -112,6 +114,16 @@ public class PlayerHand : MonoBehaviour
 							grabCount++;
 							shouldGrabThisGo = true;
 						}
+						else
+						{
+							var grabbable = go.GetComponent<Grabbable>();
+							if(grabbable != null)
+							{
+								grabbable.OnGrabbed();
+								go.transform.position += new Vector3(0, grabOffsetHeight, 0);
+								shouldGrabThisGo = true;
+							}
+						}
 
 						if(shouldGrabThisGo)
 						{
@@ -138,6 +150,11 @@ public class PlayerHand : MonoBehaviour
 					if (toddler != null)
 					{
 						toddler.beingGrabbed = false;
+					}
+					var grabbable = this.grabbedObject.GetComponent<Grabbable>();
+					if (grabbable != null)
+					{
+						grabbable.OnLetGo();
 					}
 					this.grabbedObject = null;
 					this.grabState = GrabState.Cooldown;
@@ -225,10 +242,39 @@ public class PlayerHand : MonoBehaviour
 			}
 			else
 			{
-				this.grabbedObject.transform.position += displacement;
+				var finalPosition = this.grabbedObject.transform.position + displacement;
+				finalPosition = new Vector3(
+					Mathf.Clamp(finalPosition.x , -grabMaxBounds, grabMaxBounds),
+					finalPosition.y,
+					Mathf.Clamp(finalPosition.z, -grabMaxBounds, grabMaxBounds)
+				);
+				this.grabbedObject.transform.position = finalPosition;
 			}
 		}
 	}
+
+	/*Collider[] grabColliders = new Collider[32];
+	private void TryMoveGrabObject(ShaderVariantCollection displacement)
+	{
+		var colliderBounds = this.grabbedObject.GetComponent<Collider>().bounds;
+		var startPosition = this.grabbedObject.transform.position;
+		this.grabbedObject.transform.position += displacement;
+		Debug.DrawRay(colliderBounds.center, Vector3.up, Color.red, 1.0f);
+		bool canMove = true;
+		int num = Physics.OverlapBoxNonAlloc(colliderBounds.center, colliderBounds.extents * 1.1f, grabColliders);
+		for (int i = 0; i < num; i++)
+		{
+			if (this.grabColliders[i].gameObject != this.grabbedObject)
+			{
+				canMove = false;
+			}
+		}
+
+		if (!canMove)
+		{
+			this.grabbedObject.transform.position = startPosition;
+		}
+	}*/
 
 	private void OnDrawGizmos()
 	{
