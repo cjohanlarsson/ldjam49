@@ -746,7 +746,9 @@ MonoBehaviour:
   baseRunSpeed: 2
   baseTurnSpeed: 1
   spinningQuotient: 0.314
+  jumpingQuotient: 0.6
   baseSpinSpeed: 1.5
+  baseJumpSpeed: 4
   movementRadius: 4
   maxMovementDuration: 3
   physicsBabyPrefab: {fileID: 1142495205010277591, guid: 2ec0fb5249f1aaf429b2e2cd7c6cf95e, type: 3}
@@ -770,6 +772,10 @@ MonoBehaviour:
   hangryRateOfIncrease: 1
   maxHangry: 50
   _hangryLevel: 0
+  hangrySounds:
+  - {fileID: 8300000, guid: 049bd4b27c9934077a39431ff3a6de14, type: 3}
+  - {fileID: 8300000, guid: 04bc81ff43e0744459a2069f34462a35, type: 3}
+  - {fileID: 8300000, guid: 19fc6182a81b54e6c804caa82d1cbbe3, type: 3}
 --- !u!143 &8891375186545217324
 CharacterController:
   m_ObjectHideFlags: 0

@@ -13,8 +13,7 @@ public class HangryController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] AudioClip[] hangrySounds;
-    private AudioClip hangrySound;
-
+    
     private float Hangriness
     {
         get { return _hangryLevel; }
@@ -48,6 +47,15 @@ public class HangryController : MonoBehaviour
         StartCoroutine(hangryTimer());
     }
 
+    void PlayHangrySoundAt(int index)
+	{
+        if (hangrySounds.Length > index)
+        {
+            var hangrySound = hangrySounds[index];
+            AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+        }
+	}
+
     private IEnumerator hangryTimer()
     {
         while (true)
@@ -55,18 +63,15 @@ public class HangryController : MonoBehaviour
             Hangriness += 1;
             if (100 * Hangriness / maxHangry == 26)
             {
-                hangrySound = hangrySounds[0];
-                AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+                PlayHangrySoundAt(0);
             }
             else if (100 * Hangriness / maxHangry == 50)
             {
-                hangrySound = hangrySounds[1];
-                AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+                PlayHangrySoundAt(1);
             }
             else if (100 * Hangriness / maxHangry == 76)
             {
-                hangrySound = hangrySounds[2];
-                AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
+                PlayHangrySoundAt(2);
             }
             if (Hangriness >= maxHangry) { break; }
             yield return new WaitForSeconds(1 / hangryRateOfIncrease);
