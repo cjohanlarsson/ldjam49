@@ -157,8 +157,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Use your mouse to move the hand, hold left-click to briefly pick up a toddler.
-    Get those kids to their milk before they get hangry!
+  m_Text: Use the mouse and left-click to pick up a toddler and drag them to their
+    bottle. Get those kids to their milk before they get hangry!
 --- !u!1 &206272027
 GameObject:
   m_ObjectHideFlags: 0
