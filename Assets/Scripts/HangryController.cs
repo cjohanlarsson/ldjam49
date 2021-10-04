@@ -6,13 +6,21 @@ public class HangryController : MonoBehaviour
 {
     public event System.Action<float, float> OnMeterChanged;
 
-    [SerializeField] float hangryRateOfIncrease = 1.0f;
+    [SerializeField] public float hangryRateOfIncrease = 1.0f;
     [SerializeField] public float maxHangry = 50.0f;
     [SerializeField] float _hangryLevel = 0;
 
     [Header("Audio")]
     [SerializeField] AudioClip[] hangrySounds;
-    
+
+    private int _HangrinessTier = 0;
+
+    public int HangrinessTier
+    {
+        get { return _HangrinessTier; }
+        set { _HangrinessTier = value; }
+    }
+
     public float Hangriness
     {
         get { return _hangryLevel; }
@@ -52,17 +60,24 @@ public class HangryController : MonoBehaviour
         while (true)
         {
             Hangriness += 1;
-            if (100 * Hangriness / maxHangry == 26)
+            if (100 * Hangriness / maxHangry == 0 )
+            {
+                _HangrinessTier = 0;
+            }
+            else if (100 * Hangriness / maxHangry == 26)
             {
                 PlayHangrySoundAt(0);
+                _HangrinessTier = 1;
             }
             else if (100 * Hangriness / maxHangry == 50)
             {
                 PlayHangrySoundAt(1);
+                _HangrinessTier = 2;
             }
             else if (100 * Hangriness / maxHangry == 76)
             {
                 PlayHangrySoundAt(2);
+                _HangrinessTier = 3;
             }
             if (Hangriness >= maxHangry) {
                 GetComponent<ToddlerController>().throwTantrum();
@@ -106,6 +121,7 @@ public class HangryController : MonoBehaviour
     {
         StopAllCoroutines();
         Hangriness = 0;
+        _HangrinessTier = 0;
         StartCoroutine(hangryTimer());
     }
 }
