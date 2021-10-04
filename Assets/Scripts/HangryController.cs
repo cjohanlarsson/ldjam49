@@ -13,6 +13,9 @@ public class HangryController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip[] hangrySounds;
     
+    [Header("Hangry Particles")]
+    [SerializeField] GameObject[] hangryObjects;
+    
     public float Hangriness
     {
         get { return _hangryLevel; }
@@ -52,17 +55,30 @@ public class HangryController : MonoBehaviour
         while (true)
         {
             Hangriness += 1;
+            if (100 * Hangriness / maxHangry < 26)
+            {
+                hangryObjects[0].SetActive(false);
+                hangryObjects[1].SetActive(false);
+                hangryObjects[2].SetActive(false);
+            }
+            
             if (100 * Hangriness / maxHangry == 26)
             {
                 PlayHangrySoundAt(0);
+                hangryObjects[0].SetActive(true);
+                hangryObjects[1].SetActive(false);
+                hangryObjects[2].SetActive(false);
             }
             else if (100 * Hangriness / maxHangry == 50)
             {
                 PlayHangrySoundAt(1);
+                hangryObjects[1].SetActive(true);
+                hangryObjects[2].SetActive(false);
             }
             else if (100 * Hangriness / maxHangry == 76)
             {
                 PlayHangrySoundAt(2);
+                hangryObjects[2].SetActive(true);
             }
             if (Hangriness >= maxHangry) {
                 GetComponent<ToddlerController>().throwTantrum();
