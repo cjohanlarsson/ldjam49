@@ -762,7 +762,7 @@ MonoBehaviour:
   hipRootRigidbody: {fileID: 7929483843129889639}
   leftLeg: {fileID: 787184024263038626}
   rightLeg: {fileID: 4938604284590192047}
-  legRange: 25
+  legRange: 60
   legSpeed: 4
   toddlerUIPrefab: {fileID: 5096384739714481625, guid: 20f7b4a8ddd0b8f4686864cd7a078b14, type: 3}
   steps:
@@ -1288,21 +1288,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9180034193493357146}
     m_Modifications:
-    - target: {fileID: 4396442137795409017, guid: 533c0dd496db8444e9031897d8e354d6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6281352647945415022, guid: 533c0dd496db8444e9031897d8e354d6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6573533726021228575, guid: 533c0dd496db8444e9031897d8e354d6, type: 3}
       propertyPath: m_Name
       value: HangryParticles
-      objectReference: {fileID: 0}
-    - target: {fileID: 8741673447526845993, guid: 533c0dd496db8444e9031897d8e354d6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8975045520084360124, guid: 533c0dd496db8444e9031897d8e354d6, type: 3}
       propertyPath: m_RootOrder
