@@ -2,27 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// [RequireComponent(typeof(HangryController))]
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(HangryController))]
+
 public class AudioManager : MonoBehaviour
 {
-    HangryController hc;
-    private int currentHangrinessTier = 0;
+    // HangryController hc;
+    private float currentHangriness = 0;
 
     [Header("Audio")]
     [SerializeField] AudioClip[] layers;
+    [SerializeField] ToddlerManager toddlerManager;
     private AudioSource audioSource;
 
     private void Awake()
     {
-        hc = GetComponent<HangryController>();
+        // hc = GetComponent<HangryController>();
         audioSource = this.GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        print(layers[0]);
         audioSource.clip = layers[0];
         audioSource.Play();
         StartCoroutine(hangryTimer());
@@ -32,54 +33,45 @@ public class AudioManager : MonoBehaviour
     {
         while(true)
         {
-            yield return new WaitForSeconds(1 / hc.hangryRateOfIncrease);
+            yield return new WaitForSeconds(1);
             MusicLayerSwitcher();
         }
     }
 
     void MusicLayerSwitcher()
     {
-        if (currentHangrinessTier == hc.HangrinessTier)
+        float Hangriness = toddlerManager.Hangriness;
+        if (currentHangriness == Hangriness)
         {
             print("Hangriness unchanged");
-            print(currentHangrinessTier);
-            print(hc.HangrinessTier);
-            print(hc.getHangryLevel());
+            print(Hangriness);
         }
         else
         {
-            currentHangrinessTier = hc.HangrinessTier;
-            if (currentHangrinessTier == 0)
+            currentHangriness = Hangriness;
+            if (currentHangriness == 0)
             {
-                print(currentHangrinessTier);
-                print(hc.HangrinessTier);
-                print(hc.getHangryLevel());
                 audioSource.clip = layers[0];
                 audioSource.Play();
             }
-            else if (currentHangrinessTier == 1)
+            else if (currentHangriness == 13)
             {
-                print(currentHangrinessTier);
-                print(hc.HangrinessTier);
-                print(hc.getHangryLevel());
                 audioSource.clip = layers[1];
                 audioSource.Play();
             }
-            else if (currentHangrinessTier == 2)
+            else if (currentHangriness == 25)
             {
-                print(currentHangrinessTier);
-                print(hc.HangrinessTier);
-                print(hc.getHangryLevel());
                 audioSource.clip = layers[2];
                 audioSource.Play();
             }
-            else if (currentHangrinessTier == 3)
+            else if (currentHangriness == 38)
             {
-                print(currentHangrinessTier);
-                print(hc.HangrinessTier);
-                print(hc.getHangryLevel());
                 audioSource.clip = layers[3];
                 audioSource.Play();
+            }
+            else if (currentHangriness == 50)
+            {
+                audioSource.Stop();
             }
         }
     }
