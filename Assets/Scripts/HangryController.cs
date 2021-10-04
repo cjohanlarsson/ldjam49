@@ -106,7 +106,9 @@ public class HangryController : MonoBehaviour
 
             if (Hangriness >= maxHangry)
             {
-                GetComponent<ToddlerController>().throwTantrum();
+                ToddlerController tc = GetComponent<ToddlerController>();
+                int sfxIndex = ToddlerManager.Current.getIndexOfToddler(tc);
+                tc.throwTantrum(sfxIndex);
                 break;
             }
 
