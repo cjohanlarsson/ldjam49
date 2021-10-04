@@ -270,6 +270,7 @@ public class ToddlerController : MonoBehaviour
 
             direction.Normalize();
             characterController.SimpleMove(direction * this.runSpeed);
+
             yield return null;
         }
         this.isMoving = false;
@@ -423,5 +424,18 @@ public class ToddlerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(targetPosition, 0.3f);
+    }
+   
+
+private void OnCollisionEnter(Collision collision)
+{
+        print("collieded with" + collision.gameObject.name);
+        if ((collision.gameObject.tag == "Crib" || collision.gameObject.tag == "Wall") && !HasThrownTantrum)
+        {
+            print("STOP WALKING!");
+            StopAllCoroutines();
+            alreadyMoving = false;
+            isMoving = false;
+        }
     }
 }
