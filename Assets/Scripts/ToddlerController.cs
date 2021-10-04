@@ -260,6 +260,7 @@ public class ToddlerController : MonoBehaviour
 	}
 
 	int stepsMade = 0;
+    int jumpsMade = 0;
 
     float prevLerp = -1.0f;
 
@@ -297,6 +298,10 @@ public class ToddlerController : MonoBehaviour
             AudioSource.PlayClipAtPoint(this.steps[this.stepsMade++ % this.steps.Length], this.transform.position);
     }
 
+    void PlayJumpSound()
+    {
+        AudioSource.PlayClipAtPoint(this.jumpSFX[this.jumpsMade++ % this.jumpSFX.Length], this.transform.position);
+    }
 
     Vector3 getRandomPositionNearToddler() {
         float randX = UnityEngine.Random.Range(-movementRadius, movementRadius);
@@ -392,9 +397,19 @@ public class ToddlerController : MonoBehaviour
         startPos.y = startYPos;
         jumpStartPosition = startPos;
         var startTime = Time.time;
+        float oldFactor = 0;
+        bool onWayDown = false;
         while ((Time.time - startTime) < this.maxJumpDuration)
         {
             float factor = Mathf.Abs(Mathf.Sin((Time.time - startTime) * jumpSpeed));
+            if (factor - oldFactor > 0 && onWayDown == true) {
+                onWayDown = false;
+                PlayJumpSound();
+            } else if (factor - oldFactor < 0)
+            {
+                onWayDown = true;
+            }
+            oldFactor = factor;
             Vector3 newPos = new Vector3(transform.position.x, startPos.y + factor, transform.position.z);
             transform.position = newPos;
             yield return null;
