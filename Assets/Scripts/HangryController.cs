@@ -10,12 +10,11 @@ public class HangryController : MonoBehaviour
     [SerializeField] public float maxHangry = 50.0f;
     [SerializeField] float _hangryLevel = 0;
 
-    [Header("Audio")]
-    [SerializeField] AudioClip[] hangrySounds;
-    
-    [Header("Hangry Particles")]
-    [SerializeField] GameObject[] hangryObjects;
-    
+    [Header("Audio")] [SerializeField] AudioClip[] hangrySounds;
+
+    [Header("Hangry Particles")] [SerializeField]
+    GameObject[] hangryObjects;
+
 
     private int _HangrinessTier = 0;
 
@@ -31,33 +30,33 @@ public class HangryController : MonoBehaviour
         private set
         {
             _hangryLevel = value;
-            if(OnMeterChanged != null)
+            if (OnMeterChanged != null)
                 OnMeterChanged(_hangryLevel, maxHangry);
         }
     }
 
-	private void Awake()
-	{
-	}
+    private void Awake()
+    {
+    }
 
-	private void OnDestroy()
-	{
-	}
+    private void OnDestroy()
+    {
+    }
 
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         StartCoroutine(hangryTimer());
     }
 
     void PlayHangrySoundAt(int index)
-	{
+    {
         if (hangrySounds.Length > index)
         {
             var hangrySound = hangrySounds[index];
             AudioSource.PlayClipAtPoint(hangrySound, this.transform.position);
         }
-	}
+    }
 
     private IEnumerator hangryTimer()
     {
@@ -70,39 +69,44 @@ public class HangryController : MonoBehaviour
                 hangryObjects[1].SetActive(false);
                 hangryObjects[2].SetActive(false);
             }
-            
+
             if (100 * Hangriness / maxHangry == 26)
             {
                 PlayHangrySoundAt(0);
                 hangryObjects[0].SetActive(true);
                 hangryObjects[1].SetActive(false);
                 hangryObjects[2].SetActive(false);
-            if (100 * Hangriness / maxHangry == 0 )
-            {
-                _HangrinessTier = 0;
+                if (100 * Hangriness / maxHangry == 0)
+                {
+                    _HangrinessTier = 0;
+                }
+                else if (100 * Hangriness / maxHangry == 26)
+                {
+                    PlayHangrySoundAt(0);
+                    _HangrinessTier = 1;
+                }
+                else if (100 * Hangriness / maxHangry == 50)
+                {
+                    PlayHangrySoundAt(1);
+                    hangryObjects[1].SetActive(true);
+                    hangryObjects[2].SetActive(false);
+                    _HangrinessTier = 2;
+                }
+                else if (100 * Hangriness / maxHangry == 76)
+                {
+                    PlayHangrySoundAt(2);
+                    hangryObjects[2].SetActive(true);
+                    _HangrinessTier = 3;
+                }
+
+                if (Hangriness >= maxHangry)
+                {
+                    GetComponent<ToddlerController>().throwTantrum();
+                    break;
+                }
+
+                yield return new WaitForSeconds(1 / hangryRateOfIncrease);
             }
-            else if (100 * Hangriness / maxHangry == 26)
-            {
-                PlayHangrySoundAt(0);
-                _HangrinessTier = 1;
-            }
-            else if (100 * Hangriness / maxHangry == 50)
-            {
-                PlayHangrySoundAt(1);
-                hangryObjects[1].SetActive(true);
-                hangryObjects[2].SetActive(false);
-                _HangrinessTier = 2;
-            }
-            else if (100 * Hangriness / maxHangry == 76)
-            {
-                PlayHangrySoundAt(2);
-                hangryObjects[2].SetActive(true);
-                _HangrinessTier = 3;
-            }
-            if (Hangriness >= maxHangry) {
-                GetComponent<ToddlerController>().throwTantrum();
-                break; }
-            yield return new WaitForSeconds(1 / hangryRateOfIncrease);
         }
     }
 
