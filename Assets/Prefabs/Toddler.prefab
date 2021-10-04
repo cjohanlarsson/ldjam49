@@ -747,11 +747,12 @@ MonoBehaviour:
   baseRunSpeed: 2
   baseTurnSpeed: 1
   spinningQuotient: 0.314
-  jumpingQuotient: 0.6
+  jumpingQuotient: 0.4
   baseSpinSpeed: 1.5
   baseJumpSpeed: 4
   movementRadius: 4
   maxMovementDuration: 3
+  maxJumpDuration: 1.5
   physicsBabyPrefab: {fileID: 1142495205010277591, guid: 2ec0fb5249f1aaf429b2e2cd7c6cf95e, type: 3}
   hipRootRigidbody: {fileID: 7929483843129889639}
   leftLeg: {fileID: 787184024263038626}

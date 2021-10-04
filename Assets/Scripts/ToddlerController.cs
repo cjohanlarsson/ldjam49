@@ -19,6 +19,7 @@ public class ToddlerController : MonoBehaviour
 
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
+    [SerializeField] private float maxJumpDuration = 1.5f;
     [SerializeField] private PhysicsBaby physicsBabyPrefab = null;
     [SerializeField] private Rigidbody hipRootRigidbody = null;
     [SerializeField] private Transform leftLeg = null;
@@ -362,7 +363,7 @@ public class ToddlerController : MonoBehaviour
         audioSource.Play();
         Vector3 startPos = transform.position;
         var startTime = Time.time;
-        while ((Time.time - startTime) < this.maxMovementDuration)
+        while ((Time.time - startTime) < this.maxJumpDuration)
         {
             float factor = Mathf.Abs(Mathf.Sin((Time.time - startTime) * jumpSpeed));
             Vector3 newPos = new Vector3(transform.position.x, startPos.y + factor, transform.position.z);
