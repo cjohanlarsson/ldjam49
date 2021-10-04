@@ -68,6 +68,7 @@ public class HangryController : MonoBehaviour
                 hangryObjects[0].SetActive(false);
                 hangryObjects[1].SetActive(false);
                 hangryObjects[2].SetActive(false);
+                break;
             }
 
             if (100 * Hangriness / maxHangry == 26)
