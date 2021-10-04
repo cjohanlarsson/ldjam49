@@ -72,25 +72,25 @@ public class AudioManager : MonoBehaviour
             currentHangrinessTier = HangrinessTier;
             if (currentHangrinessTier == 0)
             {
-                // Lowest tier - Starts at the beginning, but should start where tier 1 track left off
+                // Layer 1
                 audioSource.clip = layers[0];
                 audioSource.Play();
             }
             else if (currentHangrinessTier == 1)
             {
-                // 2nd Lowest Tier - Should start where tier 0 or 2 track left off
+                // Layer 2
                 audioSource.clip = layers[1];
                 audioSource.Play();
             }
             else if (currentHangrinessTier == 2)
             {
-                // 2nd highest tier - Should start where tier 1 or 3 track left off
+                // Layer 3
                 audioSource.clip = layers[2];
                 audioSource.Play();
             }
             else if (currentHangrinessTier == 3)
             {
-                // Highest tier - Should start where tier 2 track left off
+                // Layer 4
                 audioSource.clip = layers[3];
                 audioSource.Play();
             }
