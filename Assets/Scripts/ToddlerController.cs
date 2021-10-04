@@ -384,6 +384,8 @@ public class ToddlerController : MonoBehaviour
 
     private IEnumerator Idle()
 	{
+        // stop "up!" sfx
+        audioSource.Stop();
         yield return new WaitForSeconds(this.idleLength);
         alreadyMoving = false;
 	}
