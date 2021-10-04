@@ -16,7 +16,7 @@ public class ToddlerController : MonoBehaviour
     public float baseSpinSpeed = 1.5f;
     public float baseJumpSpeed = 4.0f;
     public float idleLength = 1.0f;
-
+    [SerializeField] private float tripLength = 2.0f;
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
     [SerializeField] private float maxJumpDuration = 1.5f;
@@ -36,13 +36,13 @@ public class ToddlerController : MonoBehaviour
     private AudioSource audioSource;
 
     Vector3 targetPosition;
-    bool alreadyMoving = false;
     bool isMoving = false;
     float lerpDuration = 0.5f;
     float startYPos;
 
     HangryController hc;
     CharacterController characterController;
+    CapsuleCollider rigidbodyCollider;
     GameObject toddlerUI;
 
     bool _beingGrabbed = false;
@@ -52,14 +52,10 @@ public class ToddlerController : MonoBehaviour
         set
         {
             _beingGrabbed = value;
-            if (_beingGrabbed) { alreadyMoving = false; }
-            else
-            {
-                // reset position if grabbed while jumping
-                transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
-            }
-            isMoving = false;
-            StopAllCoroutines();
+            if(_beingGrabbed)
+			{
+                CancelCurrentAction();
+			}
         }
     }
 
@@ -112,13 +108,17 @@ public class ToddlerController : MonoBehaviour
 
     enum TAction
     {
+        None,
         Spin,
-        Tantrum,
-        RunTowardTarget,
-        TurnTowardTarget,
-        Jump
+        Moving,
+        Idle,
+        Jump,
+        Trip
     }
 
+    TAction currentAction = TAction.None;
+
+    Rigidbody rigidbodyRoot;
 
     private void Awake()
     {
@@ -129,7 +129,8 @@ public class ToddlerController : MonoBehaviour
         targetPosition = getRandomPositionNearToddler();
         beingGrabbed = false;
 
-
+        rigidbodyCollider = GetComponent<CapsuleCollider>();
+        rigidbodyRoot = GetComponent<Rigidbody>();
     }
 
     private void OnDestroy()
@@ -154,34 +155,33 @@ public class ToddlerController : MonoBehaviour
 
     void Update()
     {
-        if (!alreadyMoving && !_beingGrabbed && !HasThrownTantrum)
+        if (this.currentAction == TAction.None && !_beingGrabbed && !HasThrownTantrum)
         {
-            alreadyMoving = true;
-
             float rand = UnityEngine.Random.Range(0, this.runQuotient + this.spinningQuotient + this.jumpingQuotient + this.idleQuotient);
 
             if (rand <= this.runQuotient)
             {
+                this.currentAction = TAction.Moving;
                 // do run
                 targetPosition = getRandomPositionNearToddler();
-                StartCoroutine(TurnTowardTarget(targetPosition));
+                StartCoroutine(MovingAction_TurnTowardTarget(targetPosition));
             }
             else if (rand <= this.runQuotient + this.spinningQuotient)
             {
-                // spin
-                StartCoroutine(Spin(UnityEngine.Random.Range(1.0f, 2.0f)));
+                this.currentAction = TAction.Spin;
+                StartCoroutine(SpinAction_Coro(UnityEngine.Random.Range(1.0f, 2.0f)));
             }
             else if (rand <= this.runQuotient + this.spinningQuotient + this.jumpingQuotient)
             {
-                // jump
-                StartCoroutine(Jump());
+                this.currentAction = TAction.Jump;
+                StartCoroutine(JumpAction_Coro());
             }
             else
-            {
-                // idle
-                StartCoroutine(Idle());
-            }
-        }
+			{
+				this.currentAction = TAction.Idle;
+				StartCoroutine(IdleAction_Coro());
+			}
+		}
 
         UpdateLegs();
     }
@@ -220,17 +220,20 @@ public class ToddlerController : MonoBehaviour
         if (this.leftLeg != null && this.rightLeg != null)
         {
             float lerp = Mathf.Abs(Mathf.Sin(Time.time * Mathf.PI * this.legSpeed));
-            if (!isMoving)
+            if (!this.HasThrownTantrum)
             {
-                lerp = 0.5f;
-            }
-            else
-            {
-                if ((this.prevLerp < 0.5f && lerp >= 0.5f) || (this.prevLerp > 0.5f && lerp <= 0.5f))
+                if (!isMoving)
                 {
-                    PlayStepSound();
+                    lerp = 0.5f;
                 }
-                this.prevLerp = lerp;
+                else
+                {
+                    if ((this.prevLerp < 0.5f && lerp >= 0.5f) || (this.prevLerp > 0.5f && lerp <= 0.5f))
+                    {
+                        PlayStepSound();
+                    }
+                    this.prevLerp = lerp;
+                }
             }
             float angle = Mathf.Lerp(-1 * this.legRange, this.legRange, lerp);
 
@@ -253,7 +256,7 @@ public class ToddlerController : MonoBehaviour
         return target;
     }
 
-    private IEnumerator MoveTowardTarget(Vector3 targetPos)
+    private IEnumerator MovingAction_CoroMoveTowards(Vector3 targetPos)
     {
         this.isMoving = true;
         // stop "up!" sfx
@@ -271,11 +274,17 @@ public class ToddlerController : MonoBehaviour
 
             yield return null;
         }
-        this.isMoving = false;
-        alreadyMoving = false;
+
+        MovingAction_End();
     }
 
-    private IEnumerator MoveToTarget(Vector3 targetPos)
+    private void MovingAction_End()
+	{
+		this.isMoving = false;
+		this.currentAction = TAction.None;
+	}
+
+    /*private IEnumerator MoveToTarget(Vector3 targetPos)
     {
         print("Running");
         // stop "up!" sfx
@@ -315,9 +324,9 @@ public class ToddlerController : MonoBehaviour
         transform.position = targetPos;
 
         alreadyMoving = false;
-    }
+    }*/
 
-    private IEnumerator Spin(float duration)
+    private IEnumerator SpinAction_Coro(float duration)
     {
         print("Spinning");
         // stop "up!" sfx
@@ -330,10 +339,15 @@ public class ToddlerController : MonoBehaviour
             yield return null;
         }
 
-        alreadyMoving = false;
+        SpinAction_End();
     }
 
-    private IEnumerator TurnTowardTarget(Vector3 targetPos)
+    void SpinAction_End()
+	{
+        this.currentAction = TAction.None;
+	}
+
+    private IEnumerator MovingAction_TurnTowardTarget(Vector3 targetPos)
     {
         print("Turning");
         // stop "up!" sfx
@@ -352,14 +366,19 @@ public class ToddlerController : MonoBehaviour
 
         transform.rotation = targetRotation;
 
-        yield return MoveTowardTarget(targetPos);
+        yield return MovingAction_CoroMoveTowards(targetPos);
     }
 
-    private IEnumerator Jump()
+    Vector3 jumpStartPosition;
+    private IEnumerator JumpAction_Coro()
     {
+        this.characterController.enabled = false;
+        this.rigidbodyCollider.enabled = true;
         // play "up!" sfx
         audioSource.Play();
         Vector3 startPos = transform.position;
+        startPos.y = startYPos;
+        jumpStartPosition = startPos;
         var startTime = Time.time;
         while ((Time.time - startTime) < this.maxJumpDuration)
         {
@@ -378,20 +397,83 @@ public class ToddlerController : MonoBehaviour
             yield return null;
         }
 
-        transform.position = startPos;
-
-        alreadyMoving = false;
+        
+        JumpAction_End();
     }
 
-    private IEnumerator Idle()
+    void JumpAction_End()
+	{
+        this.characterController.enabled = true;
+        this.rigidbodyCollider.enabled = false;
+        this.transform.position = jumpStartPosition;
+        this.currentAction = TAction.None;
+    }
+
+
+    private IEnumerator IdleAction_Coro()
 	{
         // stop "up!" sfx
         audioSource.Stop();
         yield return new WaitForSeconds(this.idleLength);
-        alreadyMoving = false;
+        IdleAction_End();
 	}
 
-    public void throwTantrum()
+    void IdleAction_End()
+	{
+        this.currentAction = TAction.None;
+    }
+
+    Vector3 positionReturn;
+    Quaternion rotationReturn;
+
+    private IEnumerator TripAction_Coro()
+	{
+        print("trip");
+        var rb = this.rigidbodyRoot;
+
+        // setup trip
+		positionReturn = rb.transform.position;
+        rotationReturn = rb.transform.rotation;
+        yield return new WaitForSeconds(0.1f);
+
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = false;
+        rb.AddForce(new Vector3(2, -1, 2), ForceMode.Impulse);
+        this.characterController.enabled = false;
+        this.rigidbodyCollider.enabled = true;
+
+        // wait for trip to finish
+        yield return new WaitForSeconds(this.tripLength);
+
+        // end trip
+        rb.isKinematic = true;
+		this.rigidbodyCollider.enabled = false;
+
+		var positionFallen = rb.transform.position;
+        var rotationFallen = rb.transform.rotation;
+        var lerp = 0.0f;
+        while(lerp < 1.0f)
+		{
+            lerp += Time.deltaTime;
+            rb.transform.position = Vector3.Lerp(positionFallen, positionReturn, Mathf.Clamp01(lerp));
+            rb.transform.rotation = Quaternion.Slerp(rotationFallen, rotationReturn, Mathf.Clamp01(lerp));
+            yield return null;
+		}
+
+        TripAction_End();
+    }
+
+    void TripAction_End()
+	{
+        this.currentAction = TAction.None;
+		this.characterController.enabled = true;
+        this.rigidbodyCollider.enabled = false;
+        this.rigidbodyRoot.isKinematic = true;
+        this.rigidbodyRoot.transform.position = positionReturn;
+        this.rigidbodyRoot.transform.rotation = rotationReturn;
+	}
+
+	public void throwTantrum()
     {
         if (!HasThrownTantrum)
         {
@@ -399,16 +481,16 @@ public class ToddlerController : MonoBehaviour
             HasThrownTantrum = true;
             // stop "up!" sfx
             audioSource.Stop();
-            StopAllCoroutines();
-            alreadyMoving = true;
-            isMoving = true;
+            CancelCurrentAction();
+
             // reset position if tantrum while jumping
             transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
-            GetComponent<CapsuleCollider>().radius = 0.3f;
-            Rigidbody rb = GetComponent<Rigidbody>();
-            Rigidbody rbChild = GetComponentInChildren<Rigidbody>();
+            this.rigidbodyCollider.enabled = true;
+            this.characterController.enabled = false;
+            Rigidbody rb = this.rigidbodyRoot;
+            //Rigidbody rbChild = GetComponentInChildren<Rigidbody>();
             rb.isKinematic = false;
-            rbChild.isKinematic = false;
+            //rbChild.isKinematic = false;
             rb.AddForce(new Vector3(2, -1, 2), ForceMode.Impulse);
             
             AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
@@ -418,8 +500,7 @@ public class ToddlerController : MonoBehaviour
 
     public void delayedTantrum()
     {
-        StopAllCoroutines();
-        alreadyMoving = true;
+        CancelCurrentAction();
         
         StartCoroutine(dTantrum());
     }
@@ -436,15 +517,38 @@ public class ToddlerController : MonoBehaviour
     }
    
 
-private void OnCollisionEnter(Collision collision)
-{
+    private void OnCollisionEnter(Collision collision)
+    {
         print("collieded with" + collision.gameObject.name);
-        if ((collision.gameObject.tag == "Crib" || collision.gameObject.tag == "Wall") && !HasThrownTantrum)
+        if ((collision.gameObject.tag == "Crib" || collision.gameObject.tag == "Wall") && !HasThrownTantrum && this.currentAction == TAction.Moving)
         {
-            print("STOP WALKING!");
-            StopAllCoroutines();
-            alreadyMoving = false;
-            isMoving = false;
+            CancelCurrentAction();
         }
     }
+
+    private void CancelCurrentAction()
+	{
+        switch(this.currentAction)
+		{
+            case TAction.Idle:
+                IdleAction_End();
+                break;
+            case TAction.Jump:
+                JumpAction_End();
+                break;
+            case TAction.Moving:
+                MovingAction_End();
+                break;
+            case TAction.Spin:
+                SpinAction_End();
+                break;
+            case TAction.Trip:
+                TripAction_End();
+                break;
+            default:
+                throw new System.Exception("Couldn't find: " + this.currentAction.ToString());
+		}
+        this.currentAction = TAction.None;
+        StopAllCoroutines();
+	}
 }

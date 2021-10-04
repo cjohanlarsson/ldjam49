@@ -755,6 +755,7 @@ MonoBehaviour:
   baseSpinSpeed: 1.5
   baseJumpSpeed: 4
   idleLength: 1
+  tripLength: 2
   movementRadius: 4
   maxMovementDuration: 3
   maxJumpDuration: 1.5
@@ -853,9 +854,9 @@ CapsuleCollider:
   m_GameObject: {fileID: 9180034193493357148}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
+  m_Enabled: 0
+  m_Radius: 0.2
+  m_Height: 0.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!82 &5072474195673209936
