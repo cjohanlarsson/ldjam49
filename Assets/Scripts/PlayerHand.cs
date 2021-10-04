@@ -108,7 +108,7 @@ public class PlayerHand : MonoBehaviour
 							var toddler = go.GetComponent<ToddlerController>();
 							if (toddler != null)
 							{
-								toddler.beingGrabbed = true;
+								toddler.BeingGrabbedBy = this;
 								if (this.giggles.Length > 0)
 								{
 									var giggle = this.giggles[grabCount % giggles.Length];
@@ -151,19 +151,7 @@ public class PlayerHand : MonoBehaviour
 					shouldHandBeClosed = true;
 					if (this.timeSinceLastGrabState > this.grabDuration || !isGrabKeyHeld)
 					{
-						var toddler = this.grabbedObject.GetComponent<ToddlerController>();
-						if (toddler != null)
-						{
-							toddler.beingGrabbed = false;
-						}
-						var grabbable = this.grabbedObject.GetComponent<Grabbable>();
-						if (grabbable != null)
-						{
-							grabbable.OnLetGo();
-						}
-						this.grabbedObject = null;
-						this.grabState = GrabState.Cooldown;
-						this.timeSinceLastGrabState = 0.0f;
+						CancelGrab();
 					}
 					break;
 
@@ -284,6 +272,26 @@ public class PlayerHand : MonoBehaviour
 			this.grabbedObject.transform.position = startPosition;
 		}
 	}*/
+
+	public void CancelGrab()
+	{
+		if(this.grabState == GrabState.Grabbed)
+		{
+			var toddler = this.grabbedObject.GetComponent<ToddlerController>();
+			if (toddler != null)
+			{
+				toddler.BeingGrabbedBy = null;
+			}
+			var grabbable = this.grabbedObject.GetComponent<Grabbable>();
+			if (grabbable != null)
+			{
+				grabbable.OnLetGo();
+			}
+			this.grabbedObject = null;
+			this.grabState = GrabState.Cooldown;
+			this.timeSinceLastGrabState = 0.0f;
+		}
+	}
 
 	private void OnDrawGizmos()
 	{

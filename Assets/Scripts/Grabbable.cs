@@ -9,9 +9,12 @@ public class Grabbable : MonoBehaviour
 	int timesGrabbed = 0;
 
 	List<Rigidbody> rbsToChangeBack = new List<Rigidbody>();
+	
+	public bool IsBeingGrabbed { get; private set; }
 
 	public void OnGrabbed()
 	{
+		this.IsBeingGrabbed = true;
 		if (this.clipsToPlayOnGrab.Length > 0)
 		{
 			var clip = this.clipsToPlayOnGrab[this.timesGrabbed % this.clipsToPlayOnGrab.Length];
@@ -31,10 +34,19 @@ public class Grabbable : MonoBehaviour
 
 	public void OnLetGo()
 	{
-		foreach(var rb in this.rbsToChangeBack)
+		this.IsBeingGrabbed = false;
+		foreach (var rb in this.rbsToChangeBack)
 		{
 			rb.isKinematic = false;
 		}
 		this.rbsToChangeBack.Clear();
 	}
+
+	/*void OnCollisionEnter(Collision collision)
+	{
+		if (this.IsBeingGrabbed)
+		{
+			Debug.Log("IS BEING GRABBED: " + collision.gameObject.name);
+		}
+	}*/
 }

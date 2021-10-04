@@ -65,7 +65,7 @@ public class AudioManager : MonoBehaviour
 
         if (currentHangrinessTier == HangrinessTier)
         {
-            print("Hangriness Tier Unchanged");
+           // print("Hangriness Tier Unchanged");
         }
         else
         {

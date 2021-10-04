@@ -5,7 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(HangryController))]
 public class ToddlerController : MonoBehaviour
 {
-    public float baseRunSpeed = 2.0f;
+
+	[Header("Movement")]
+	public float baseRunSpeed = 2.0f;
     public float hangryMaxRunSpeed = 4.0f;
     public float baseTurnSpeed = 1.0f;
     [Tooltip("Weighted time spent idling.")] public float idleQuotient = 0.1f;
@@ -16,7 +18,6 @@ public class ToddlerController : MonoBehaviour
     public float baseSpinSpeed = 1.5f;
     public float baseJumpSpeed = 4.0f;
     public float idleLength = 1.0f;
-    [SerializeField] private float tripLength = 2.0f;
 
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
@@ -29,7 +30,13 @@ public class ToddlerController : MonoBehaviour
     [SerializeField] private float legSpeed = 4.0f;
     [SerializeField] private GameObject toddlerUIPrefab;
 
-    [Header("Audio")]
+	[Header("Tripping")]
+	[SerializeField] private bool tripEnabled = true;
+	[SerializeField] private float tripLength = 2.0f;
+	[SerializeField] private float tripGetupLength = 0.5f;
+
+
+	[Header("Audio")]
     [SerializeField] AudioClip[] steps;
     [SerializeField] AudioClip tantrumSFX;
     [SerializeField] AudioClip[] jumpSFX;
@@ -46,14 +53,15 @@ public class ToddlerController : MonoBehaviour
     CapsuleCollider rigidbodyCollider;
     GameObject toddlerUI;
 
-    bool _beingGrabbed = false;
-    public bool beingGrabbed
+    bool beingGrabbed { get { return this._beingGrabbedBy != null; } }
+    PlayerHand _beingGrabbedBy = null;
+    public PlayerHand BeingGrabbedBy
     {
-        get { return _beingGrabbed; }
+        get { return _beingGrabbedBy; }
         set
         {
-            _beingGrabbed = value;
-            if(_beingGrabbed)
+            _beingGrabbedBy = value;
+            if(_beingGrabbedBy != null)
 			{
                 CancelCurrentAction();
 			}
@@ -128,8 +136,7 @@ public class ToddlerController : MonoBehaviour
         hc = GetComponent<HangryController>();
         characterController = GetComponent<CharacterController>();
         targetPosition = getRandomPositionNearToddler();
-        beingGrabbed = false;
-
+        
         rigidbodyCollider = GetComponent<CapsuleCollider>();
         rigidbodyRoot = GetComponent<Rigidbody>();
     }
@@ -152,34 +159,53 @@ public class ToddlerController : MonoBehaviour
         this.toddlerUI.GetComponentInChildren<HangryMeter>().toddlerToWatch = this.GetComponent<HangryController>();
     }
 
-    
+    TAction ChooseNextAction()
+	{
+        float rand = UnityEngine.Random.Range(0, this.runQuotient + this.spinningQuotient + this.jumpingQuotient + this.idleQuotient);
+		if (rand <= this.runQuotient)
+		{
+			return TAction.Moving;
+			
+		}
+		else if (rand <= this.runQuotient + this.spinningQuotient)
+		{
+			return TAction.Spin;
+		}
+		else if (rand <= this.runQuotient + this.spinningQuotient + this.jumpingQuotient)
+		{
+			return TAction.Jump;
+		}
+		else
+		{
+			return TAction.Idle;
+		}
+	}
 
+    float actionCooldownTill = -666.0f;
     void Update()
     {
-        if (this.currentAction == TAction.None && !_beingGrabbed && !HasThrownTantrum)
+        if (this.currentAction == TAction.None && !this.beingGrabbed && !HasThrownTantrum && Time.time >= this.actionCooldownTill)
         {
-            float rand = UnityEngine.Random.Range(0, this.runQuotient + this.spinningQuotient + this.jumpingQuotient + this.idleQuotient);
+            var nextAction = ChooseNextAction();
+            Debug.LogFormat("Toddler {0} chooses {1}", this.name, nextAction.ToString());
+            actionCooldownTill = Time.time + 1.0f;
 
-            if (rand <= this.runQuotient)
+            if (nextAction == TAction.Moving)
             {
-                this.currentAction = TAction.Moving;
                 // do run
                 targetPosition = getRandomPositionNearToddler();
-                StartCoroutine(MovingAction_TurnTowardTarget(targetPosition));
+                StartCoroutine(MovingAction_CoroTurnTowardTarget(targetPosition));
             }
-            else if (rand <= this.runQuotient + this.spinningQuotient)
+            else if (nextAction == TAction.Spin)
             {
-                this.currentAction = TAction.Spin;
                 StartCoroutine(SpinAction_Coro(UnityEngine.Random.Range(1.0f, 2.0f)));
             }
-            else if (rand <= this.runQuotient + this.spinningQuotient + this.jumpingQuotient)
+            else if (nextAction == TAction.Jump)
             {
-                this.currentAction = TAction.Jump;
                 StartCoroutine(JumpAction_Coro());
             }
             else
 			{
-				this.currentAction = TAction.Idle;
 				StartCoroutine(IdleAction_Coro());
 			}
 		}
@@ -204,6 +230,25 @@ public class ToddlerController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit collision)
 	{
+		var grabbable = collision.gameObject.GetComponent<Grabbable>();
+		if (grabbable != null)
+		{
+			if (grabbable.IsBeingGrabbed || this.beingGrabbed)
+			{
+                if(this.currentAction != TAction.Trip)
+				{
+                    if(this.BeingGrabbedBy != null)
+					{
+                        this.BeingGrabbedBy.CancelGrab();
+					}
+                    Debug.LogFormat("Toddler {0} was tripped by {1} ", this.gameObject.name, collision.gameObject.name);
+                    CancelCurrentAction();
+                    StartCoroutine(TripAction_Coro());
+                    return;
+				}
+			}
+		}
+
 		//checks if there is rigidbody
 		if (collision.rigidbody == null || collision.rigidbody.isKinematic) { return; }
 		Vector3 pushDir = collision.controller.velocity;
@@ -257,79 +302,10 @@ public class ToddlerController : MonoBehaviour
         return target;
     }
 
-    private IEnumerator MovingAction_CoroMoveTowards(Vector3 targetPos)
+	#region Spin Action
+	private IEnumerator SpinAction_Coro(float duration)
     {
-        this.isMoving = true;
-        // stop "up!" sfx
-        audioSource.Stop();
-        var startTime = Time.time;
-        while ((Time.time - startTime) < this.maxMovementDuration)
-        {
-            Vector3 direction = (targetPos - transform.position);
-            direction.y = 0.0f;
-            if (direction.sqrMagnitude < 0.01f)
-                break;
-
-            direction.Normalize();
-            characterController.SimpleMove(direction * this.runSpeed);
-
-            yield return null;
-        }
-
-        MovingAction_End();
-    }
-
-    private void MovingAction_End()
-	{
-		this.isMoving = false;
-		this.currentAction = TAction.None;
-	}
-
-    /*private IEnumerator MoveToTarget(Vector3 targetPos)
-    {
-        print("Running");
-        // stop "up!" sfx
-        audioSource.Stop();
-        // pre-cache the initial position
-        var startPos = transform.position;
-
-        // using the given average velocity calculate how long the animation
-        // shall take in total
-        var distance = Vector3.Distance(startPos, targetPos);
-
-        if (Mathf.Approximately(distance, 0))
-        {
-            Debug.LogWarning("Start and end position are equal!", this);
-            // Allow the next routine to start now
-            alreadyMoving = false;
-            yield break;
-        }
-
-        var duration = distance / runSpeed;
-
-        var timeElapsed = 0f;
-        while (timeElapsed < duration)
-        {
-            var factor = timeElapsed / duration;
-
-            factor = 1 - Mathf.Pow(1 - factor, 3);
-            factor *= factor; //Mathf.SmoothStep(0, 1, factor);
-
-            transform.position = Vector3.Lerp(startPos, targetPos, factor);
-
-            yield return null;
-
-            timeElapsed += Time.deltaTime;
-        }
-
-        transform.position = targetPos;
-
-        alreadyMoving = false;
-    }*/
-
-    private IEnumerator SpinAction_Coro(float duration)
-    {
-        print("Spinning");
+        this.currentAction = TAction.Spin;
         // stop "up!" sfx
         audioSource.Stop();
         float endTime = Time.realtimeSinceStartup + duration;
@@ -347,10 +323,12 @@ public class ToddlerController : MonoBehaviour
 	{
         this.currentAction = TAction.None;
 	}
+	#endregion
 
-    private IEnumerator MovingAction_TurnTowardTarget(Vector3 targetPos)
+	#region Moving Action
+	private IEnumerator MovingAction_CoroTurnTowardTarget(Vector3 targetPos)
     {
-        print("Turning");
+        this.currentAction = TAction.Moving;
         // stop "up!" sfx
         audioSource.Stop();
         Quaternion startRotation = transform.rotation;
@@ -370,9 +348,39 @@ public class ToddlerController : MonoBehaviour
         yield return MovingAction_CoroMoveTowards(targetPos);
     }
 
-    Vector3 jumpStartPosition;
+	private IEnumerator MovingAction_CoroMoveTowards(Vector3 targetPos)
+	{
+		this.isMoving = true;
+		// stop "up!" sfx
+		audioSource.Stop();
+		var startTime = Time.time;
+		while ((Time.time - startTime) < this.maxMovementDuration)
+		{
+			Vector3 direction = (targetPos - transform.position);
+			direction.y = 0.0f;
+			if (direction.sqrMagnitude < 0.01f)
+				break;
+
+			direction.Normalize();
+			characterController.SimpleMove(direction * this.runSpeed);
+
+			yield return null;
+		}
+
+		MovingAction_End();
+	}
+
+	private void MovingAction_End()
+	{
+		this.isMoving = false;
+		this.currentAction = TAction.None;
+	}
+	#endregion
+
+	Vector3 jumpStartPosition;
     private IEnumerator JumpAction_Coro()
     {
+        this.currentAction = TAction.Jump;
         this.characterController.enabled = false;
         this.rigidbodyCollider.enabled = true;
         // play "up!" sfx
@@ -412,6 +420,7 @@ public class ToddlerController : MonoBehaviour
 
     private IEnumerator IdleAction_Coro()
 	{
+        this.currentAction = TAction.Idle;
         // stop "up!" sfx
         audioSource.Stop();
         yield return new WaitForSeconds(this.idleLength);
@@ -428,7 +437,7 @@ public class ToddlerController : MonoBehaviour
 
     private IEnumerator TripAction_Coro()
 	{
-        print("trip");
+        this.currentAction = TAction.Trip;
         var rb = this.rigidbodyRoot;
 
         // setup trip
@@ -454,7 +463,7 @@ public class ToddlerController : MonoBehaviour
         var lerp = 0.0f;
         while(lerp < 1.0f)
 		{
-            lerp += Time.deltaTime;
+            lerp += (Time.deltaTime / this.tripGetupLength);
             rb.transform.position = Vector3.Lerp(positionFallen, positionReturn, Mathf.Clamp01(lerp));
             rb.transform.rotation = Quaternion.Slerp(rotationFallen, rotationReturn, Mathf.Clamp01(lerp));
             yield return null;
@@ -515,7 +524,7 @@ public class ToddlerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(targetPosition, 0.3f);
     }
-   
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -528,6 +537,9 @@ public class ToddlerController : MonoBehaviour
 
     private void CancelCurrentAction()
 	{
+        if (this.currentAction == TAction.None)
+            return;
+        
         switch(this.currentAction)
 		{
             case TAction.Idle:
