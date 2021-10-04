@@ -15,7 +15,7 @@ public class Bottle : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if(other.GetComponentInChildren<ToddlerController>() != null)
+		if(other.GetComponentInChildren<ToddlerController>() != null && !ToddlerManager.Current.IsGameOver)
 		{
 			AudioSource.PlayClipAtPoint(bottleDrink, this.transform.position);
 			GameObject.Destroy(this.gameObject);
