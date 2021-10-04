@@ -107,7 +107,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
-    - _Ramp0: 0.1
+    - _Ramp0: 0.4
     - _Ramp1: -0.39
     - _RampSmoothness: 0.005
     - _RampTriple: 1
