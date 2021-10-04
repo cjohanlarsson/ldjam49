@@ -82,7 +82,8 @@ public class ToddlerManager : MonoBehaviour
 				{
 					if (!tod.HasThrownTantrum)
 					{
-						tod.delayedTantrum();
+						int index = toddlers.IndexOf(tod);
+						tod.delayedTantrum(index);
 					}
 				}
 			}
@@ -93,5 +94,10 @@ public class ToddlerManager : MonoBehaviour
     {
 		if (Current = this)
 			Current = null;
+    }
+
+	public int getIndexOfToddler(ToddlerController toddler)
+    {
+		return toddlers.IndexOf(toddler);
     }
 }

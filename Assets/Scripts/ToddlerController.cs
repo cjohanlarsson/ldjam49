@@ -38,7 +38,7 @@ public class ToddlerController : MonoBehaviour
 
 	[Header("Audio")]
     [SerializeField] AudioClip[] steps;
-    [SerializeField] AudioClip tantrumSFX;
+    [SerializeField] AudioClip[] tantrumSFX;
     [SerializeField] AudioClip[] jumpSFX;
     private AudioClip step;
     private AudioSource audioSource;
@@ -485,8 +485,10 @@ public class ToddlerController : MonoBehaviour
         this.rigidbodyRoot.transform.rotation = rotationReturn;
 	}
 
-	public void throwTantrum()
+	public void throwTantrum(int sfxIndex = 0)
     {
+        sfxIndex = sfxIndex % tantrumSFX.Length;
+
         if (!HasThrownTantrum)
         {
             
@@ -504,22 +506,22 @@ public class ToddlerController : MonoBehaviour
             rb.isKinematic = false;
             //rbChild.isKinematic = false;
             rb.AddForce(new Vector3(2, -1, 2), ForceMode.Impulse);
-            
-            AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
+            print("playing index " + sfxIndex);
+            AudioSource.PlayClipAtPoint(tantrumSFX[sfxIndex], this.transform.position);
         }
 
     }
 
-    public void delayedTantrum()
+    public void delayedTantrum(int sfxIndex = 0)
     {
         CancelCurrentAction();
         
-        StartCoroutine(dTantrum());
+        StartCoroutine(dTantrum(sfxIndex));
     }
 
-    private IEnumerator dTantrum() {
+    private IEnumerator dTantrum(int sfxIndex) {
         yield return new WaitForSeconds(UnityEngine.Random.value * 2.0f);
-        throwTantrum();
+        throwTantrum(sfxIndex);
     }
 
     private void OnDrawGizmos()

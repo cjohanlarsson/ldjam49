@@ -755,7 +755,6 @@ MonoBehaviour:
   baseSpinSpeed: 1.5
   baseJumpSpeed: 4
   idleLength: 1
-  tripLength: 2
   movementRadius: 4
   maxMovementDuration: 3
   maxJumpDuration: 1.5
@@ -766,6 +765,9 @@ MonoBehaviour:
   legRange: 60
   legSpeed: 4
   toddlerUIPrefab: {fileID: 5096384739714481625, guid: 20f7b4a8ddd0b8f4686864cd7a078b14, type: 3}
+  tripEnabled: 1
+  tripLength: 2
+  tripGetupLength: 0.5
   steps:
   - {fileID: 8300000, guid: b14c9022db3384883b2147b622051890, type: 3}
   - {fileID: 8300000, guid: a7376fc0792104cbd88e4b738df1cb42, type: 3}
@@ -776,7 +778,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8803fd3a5b30c48e19dd53cf4d181ac7, type: 3}
   - {fileID: 8300000, guid: 7fcc0370bfa4e4d45894029160ad7a10, type: 3}
   - {fileID: 8300000, guid: cf729940cd7e942f9a5b44fb020c6a33, type: 3}
-  tantrumSFX: {fileID: 8300000, guid: 1e3d157c5d7394c7b90da6139fb2e523, type: 3}
+  tantrumSFX:
+  - {fileID: 8300000, guid: 1e3d157c5d7394c7b90da6139fb2e523, type: 3}
+  - {fileID: 8300000, guid: 222178c20116f43e48959cf5dddab26f, type: 3}
+  - {fileID: 8300000, guid: 1458f94e5371942ecab71f347bfb4795, type: 3}
+  - {fileID: 8300000, guid: c3189de4041f64c63ad6e7dd83f386fd, type: 3}
+  - {fileID: 8300000, guid: a9fd9bedeed0f4a9ba95ef3d5bb04311, type: 3}
   jumpSFX:
   - {fileID: 8300000, guid: 0437ddb28699a49909cc1f38c84620e0, type: 3}
   - {fileID: 8300000, guid: 26627967da6f3479580812ba0440c36f, type: 3}
