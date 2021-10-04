@@ -745,11 +745,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseRunSpeed: 2
+  hangryMaxRunSpeed: 4
   baseTurnSpeed: 1
+  idleQuotient: 1
+  runQuotient: 0.775
   spinningQuotient: 0.314
-  jumpingQuotient: 0.6
+  jumpingQuotient: 0.502
   baseSpinSpeed: 1.5
   baseJumpSpeed: 4
+  idleLength: 1
   movementRadius: 4
   maxMovementDuration: 3
   physicsBabyPrefab: {fileID: 1142495205010277591, guid: 2ec0fb5249f1aaf429b2e2cd7c6cf95e, type: 3}
@@ -780,6 +784,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a6537301583334344a8e3791e23702ad, type: 3}
   - {fileID: 8300000, guid: 6ffeb7f5eedab41b6b0569c4a37c0db9, type: 3}
   - {fileID: 8300000, guid: 92bc4121c276e42b8a9b0b2a4d4181f5, type: 3}
+  hitForceMultiplyer: 10
 --- !u!114 &650929278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,10 +815,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1
-  m_Radius: 0.3
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_Height: 0.9
+  m_Radius: 0.2
+  m_SlopeLimit: 0
+  m_StepOffset: 0
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.5, z: 0}
@@ -842,8 +847,8 @@ CapsuleCollider:
   m_GameObject: {fileID: 9180034193493357148}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.1
+  m_Enabled: 0
+  m_Radius: 0.2
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
