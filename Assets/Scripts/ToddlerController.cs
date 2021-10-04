@@ -6,16 +6,16 @@ using UnityEngine;
 public class ToddlerController : MonoBehaviour
 {
     public float baseRunSpeed = 2.0f;
+    public float hangryMaxRunSpeed = 4.0f;
     public float baseTurnSpeed = 1.0f;
-    [Range(0.0f, 1.0f)]
-    [Tooltip("Higher makes toddler spin more often.")]
-    public float spinningQuotient = 0.314f;
-    [Range(0.0f, 1.0f)]
-    [Tooltip("Higher makes toddler jump more often.")]
-    public float jumpingQuotient = 0.6f;
+    [Tooltip("Weighted time spent idling.")] public float idleQuotient = 0.1f;
+    [Tooltip("Weighted time spent running.")] public float runQuotient = 0.2f;
+    [Tooltip("Weighted time spent spinning.")] public float spinningQuotient = 0.314f;
+    [Tooltip("Weighted time spent jumping.")] public float jumpingQuotient = 0.6f;
     [Range(1.0f, 3.5f)]
     public float baseSpinSpeed = 1.5f;
     public float baseJumpSpeed = 4.0f;
+    public float idleLength = 1.0f;
 
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
@@ -38,7 +38,6 @@ public class ToddlerController : MonoBehaviour
     Vector3 targetPosition;
     bool alreadyMoving = false;
     bool isMoving = false;
-    bool readyToRun = false;
     float lerpDuration = 0.5f;
     float startYPos;
 
@@ -95,7 +94,7 @@ public class ToddlerController : MonoBehaviour
     {
         get
         {
-            return baseRunSpeed + 10 * hangryRatio;
+            return Mathf.Lerp(baseRunSpeed , this.hangryMaxRunSpeed, hangryRatio);
         }
     }
 
@@ -151,69 +150,68 @@ public class ToddlerController : MonoBehaviour
         this.toddlerUI.GetComponentInChildren<HangryMeter>().toddlerToWatch = this.GetComponent<HangryController>();
     }
 
+    
+
     void Update()
     {
         if (!alreadyMoving && !_beingGrabbed && !HasThrownTantrum)
         {
             alreadyMoving = true;
-            if (readyToRun)
-            {
-                readyToRun = false;
-                if (oooSomethingElse)
-                {
-                    alreadyMoving = false;
-                }
-                else
-                {
-                    StartCoroutine(MoveTowardTarget(targetPosition));
-                    //StartCoroutine(MoveToTarget(targetPosition));
-                }
 
+            float rand = UnityEngine.Random.Range(0, this.runQuotient + this.spinningQuotient + this.jumpingQuotient + this.idleQuotient);
+
+            if (rand <= this.runQuotient)
+            {
+                // do run
+                targetPosition = getRandomPositionNearToddler();
+                StartCoroutine(TurnTowardTarget(targetPosition));
+            }
+            else if (rand <= this.runQuotient + this.spinningQuotient)
+            {
+                // spin
+                StartCoroutine(Spin(UnityEngine.Random.Range(1.0f, 2.0f)));
+            }
+            else if (rand <= this.runQuotient + this.spinningQuotient + this.jumpingQuotient)
+            {
+                // jump
+                StartCoroutine(Jump());
             }
             else
             {
-                int index = UnityEngine.Random.Range(0, Enum.GetValues(typeof(TAction)).Length);
-                TAction nextAction = (TAction)index;
-                switch (nextAction)
-                {
-                    case TAction.RunTowardTarget:
-                        alreadyMoving = false;
-                        break;
-                    case TAction.Spin:
-                        if (UnityEngine.Random.value < spinningQuotient)
-                        {
-                            StartCoroutine(Spin(UnityEngine.Random.Range(1.0f, 2.0f)));
-                        } else { alreadyMoving = false; }
-                        break;
-                    case TAction.Tantrum:
-                        alreadyMoving = false;
-                        break;
-                    case TAction.TurnTowardTarget:
-                        targetPosition = getRandomPositionNearToddler();
-                        StartCoroutine(TurnTowardTarget(targetPosition));
-                        break;
-                    case TAction.Jump:
-                        if (UnityEngine.Random.value < jumpingQuotient)
-                        {
-                            StartCoroutine(Jump());
-                        }
-                        else { alreadyMoving = false; }
-
-                        break;
-                }
+                // idle
+                StartCoroutine(Idle());
             }
         }
 
         UpdateLegs();
     }
 
-    private void LateUpdate()
-    {
+	private void LateUpdate()
+	{
         toddlerUI.transform.position = this.transform.position;
 
     }
 
-    int stepsMade = 0;
+	/*void OnControllerColliderHit(ControllerColliderHit hit)
+	{
+		Rigidbody body = hit.collider.attachedRigidbody;
+		if (body != null && !body.isKinematic)
+             body.velocity += hit.controller.velocity;
+	}*/
+
+    [SerializeField] float hitForceMultiplyer = 100.0f;
+
+    void OnControllerColliderHit(ControllerColliderHit collision)
+	{
+		//checks if there is rigidbody
+		if (collision.rigidbody == null || collision.rigidbody.isKinematic) { return; }
+		Vector3 pushDir = collision.controller.velocity;
+		//Adds force to the object
+		collision.rigidbody.AddForce(pushDir * collision.controller.velocity.magnitude * hitForceMultiplyer * Time.deltaTime, ForceMode.Impulse);
+	}
+
+	int stepsMade = 0;
+
     float prevLerp = -1.0f;
 
     void UpdateLegs()
@@ -354,8 +352,7 @@ public class ToddlerController : MonoBehaviour
 
         transform.rotation = targetRotation;
 
-        readyToRun = true;
-        alreadyMoving = false;
+        yield return MoveTowardTarget(targetPos);
     }
 
     private IEnumerator Jump()
@@ -385,6 +382,14 @@ public class ToddlerController : MonoBehaviour
 
         alreadyMoving = false;
     }
+
+    private IEnumerator Idle()
+	{
+        // stop "up!" sfx
+        audioSource.Stop();
+        yield return new WaitForSeconds(this.idleLength);
+        alreadyMoving = false;
+	}
 
     public void throwTantrum()
     {
