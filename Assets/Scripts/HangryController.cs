@@ -69,7 +69,7 @@ public class HangryController : MonoBehaviour
                 hangryObjects[1].SetActive(false);
                 hangryObjects[2].SetActive(false);
                 Hangriness += 1;
-                break;
+                yield return new WaitForSeconds(1 / hangryRateOfIncrease);
             }
             Hangriness += 1;
 
@@ -79,37 +79,38 @@ public class HangryController : MonoBehaviour
                 hangryObjects[0].SetActive(true);
                 hangryObjects[1].SetActive(false);
                 hangryObjects[2].SetActive(false);
-                if (100 * Hangriness / maxHangry == 0)
-                {
-                    _HangrinessTier = 0;
-                }
-                else if (100 * Hangriness / maxHangry == 26)
-                {
-                    PlayHangrySoundAt(0);
-                    _HangrinessTier = 1;
-                }
-                else if (100 * Hangriness / maxHangry == 50)
-                {
-                    PlayHangrySoundAt(1);
-                    hangryObjects[1].SetActive(true);
-                    hangryObjects[2].SetActive(false);
-                    _HangrinessTier = 2;
-                }
-                else if (100 * Hangriness / maxHangry == 76)
-                {
-                    PlayHangrySoundAt(2);
-                    hangryObjects[2].SetActive(true);
-                    _HangrinessTier = 3;
-                }
-
-                if (Hangriness >= maxHangry)
-                {
-                    GetComponent<ToddlerController>().throwTantrum();
-                    break;
-                }
-
-                yield return new WaitForSeconds(1 / hangryRateOfIncrease);
             }
+
+            if (100 * Hangriness / maxHangry == 0)
+            {
+                _HangrinessTier = 0;
+            }
+            else if (100 * Hangriness / maxHangry == 26)
+            {
+                PlayHangrySoundAt(0);
+                _HangrinessTier = 1;
+            }
+            else if (100 * Hangriness / maxHangry == 50)
+            {
+                PlayHangrySoundAt(1);
+                hangryObjects[1].SetActive(true);
+                hangryObjects[2].SetActive(false);
+                _HangrinessTier = 2;
+            }
+            else if (100 * Hangriness / maxHangry == 76)
+            {
+                PlayHangrySoundAt(2);
+                hangryObjects[2].SetActive(true);
+                _HangrinessTier = 3;
+            }
+
+            if (Hangriness >= maxHangry)
+            {
+                GetComponent<ToddlerController>().throwTantrum();
+                break;
+            }
+
+            yield return new WaitForSeconds(1 / hangryRateOfIncrease);
         }
     }
 
