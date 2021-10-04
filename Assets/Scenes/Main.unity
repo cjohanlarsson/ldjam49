@@ -212,7 +212,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10.626382, y: 9.876301, z: 8.3862915}
+  m_Size: {x: 10.626382, y: 42.06, z: 8.3862915}
   m_Center: {x: 0, y: 4.4381466, z: 0}
 --- !u!4 &61330402 stripped
 Transform:
@@ -2984,7 +2984,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10.626382, y: 9.876301, z: 8.3862915}
+  m_Size: {x: 10.626382, y: 48.28, z: 8.3862915}
   m_Center: {x: 0, y: 4.4381466, z: 0}
 --- !u!4 &1712397697 stripped
 Transform:
