@@ -3748,9 +3748,65 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 75918778, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75918778, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75918778, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75918778, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75918778, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75918778, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249181398089996903, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249181398089996903, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249181398089996903, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249181398089996903, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249181398089996903, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 249181398089996903, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1983127338472979644, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 8318c54e24ad04796a50eacc9038c216, type: 3}
     - target: {fileID: 3504484158606953596, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
       propertyPath: m_Name
       value: MAIN
+      objectReference: {fileID: 0}
+    - target: {fileID: 4275882300477342427, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_Name
+      value: AUDIO_MANAGER -- gameover track goes here
       objectReference: {fileID: 0}
     - target: {fileID: 7956579645900179879, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
       propertyPath: m_RootOrder
@@ -3794,6 +3850,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7956579645900179879, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204119031620628507, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204119031620628507, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204119031620628507, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204119031620628507, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204119031620628507, guid: b721aa45c69232543ad62d8659a4cc77, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

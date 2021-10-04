@@ -1552,7 +1552,7 @@ GameObject:
   - component: {fileID: 1983127338472979644}
   - component: {fileID: 1219508236036611638}
   m_Layer: 0
-  m_Name: AUDIO_MANAGER
+  m_Name: AUDIO_MANAGER -- gameover track goes here
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1583,7 +1583,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -3199410308849318237, guid: 0612c16004f4c4920a681e60a28415ad, type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 8318c54e24ad04796a50eacc9038c216, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1681,12 +1681,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5dcb8e1ccce94c97ac7cede025f939c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layers:
-  - {fileID: 8300000, guid: c864d7972018448139fbff07b67094a7, type: 3}
-  - {fileID: 8300000, guid: 034bcde9fde5f4bb79c76334fc0a434b, type: 3}
-  - {fileID: 8300000, guid: 42fa3e906bcaa487d852ef3c2eba5503, type: 3}
-  - {fileID: 8300000, guid: 9b5845ef09a314255a5c1fa6e81d86e0, type: 3}
-  - {fileID: 8300000, guid: 8318c54e24ad04796a50eacc9038c216, type: 3}
   toddlerManager: {fileID: 364375245904521490}
   snapshots:
   - {fileID: 24500006, guid: 0612c16004f4c4920a681e60a28415ad, type: 2}

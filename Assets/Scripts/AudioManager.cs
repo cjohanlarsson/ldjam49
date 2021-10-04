@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour
     int HangrinessTier = 0;
 
     [Header("Audio")]
-    [SerializeField] AudioClip[] layers;
+    //[SerializeField] AudioClip[] layers;
     [SerializeField] ToddlerManager toddlerManager;
     [SerializeField] private AudioMixerSnapshot[] snapshots;
     private AudioSource audioSource;
@@ -90,7 +90,6 @@ public class AudioManager : MonoBehaviour
                     break;
                 case 4:
                     snapshots[4].TransitionTo(0.25f);
-                    audioSource.clip = layers[4];
                     audioSource.Play();
                     break;
             }
