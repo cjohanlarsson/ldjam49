@@ -1,6 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
-using System.ComponentModel.DataAnnotations;
+//using System.ComponentModel.DataAnnotations;
 using System;
 public class HangryMeter : MonoBehaviour
 {
