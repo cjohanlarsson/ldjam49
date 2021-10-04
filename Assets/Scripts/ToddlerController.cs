@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = System.Random;
 
 [RequireComponent(typeof(HangryController))]
 public class ToddlerController : MonoBehaviour
@@ -40,6 +41,7 @@ public class ToddlerController : MonoBehaviour
     [SerializeField] AudioClip[] steps;
     [SerializeField] AudioClip[] tantrumSFX;
     [SerializeField] AudioClip[] jumpSFX;
+    [SerializeField] AudioClip[] tripSFX;
     private AudioClip step;
     private AudioSource audioSource;
 
@@ -244,6 +246,8 @@ public class ToddlerController : MonoBehaviour
                             this.BeingGrabbedBy.CancelGrab();
                         }
                         Debug.LogFormat("Toddler {0} was tripped by {1} ", this.gameObject.name, collision.gameObject.name);
+                        audioSource.PlayOneShot(tripSFX[0]);
+                        audioSource.PlayOneShot(tripSFX[UnityEngine.Random.Range(1,3)]);
                         CancelCurrentAction();
                         StartCoroutine(TripAction_Coro());
                         return;

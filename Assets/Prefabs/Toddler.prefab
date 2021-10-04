@@ -794,6 +794,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a6537301583334344a8e3791e23702ad, type: 3}
   - {fileID: 8300000, guid: 6ffeb7f5eedab41b6b0569c4a37c0db9, type: 3}
   - {fileID: 8300000, guid: 92bc4121c276e42b8a9b0b2a4d4181f5, type: 3}
+  tripSFX:
+  - {fileID: 8300000, guid: 8075b19f39d75124499a91531127be00, type: 3}
+  - {fileID: 8300000, guid: 42ec2523586014637ac2f029ecc49961, type: 3}
+  - {fileID: 8300000, guid: 7968e58151b8e4212b235e421744e86a, type: 3}
   hitForceMultiplyer: 10
 --- !u!114 &650929278
 MonoBehaviour:
