@@ -92,7 +92,8 @@ public class AudioManager : MonoBehaviour
             }
             else if (currentHangrinessTier == 4)
             {
-                audioSource.Stop();
+                audioSource.clip = layers[4];
+                audioSource.Play();
             }
         }
     }

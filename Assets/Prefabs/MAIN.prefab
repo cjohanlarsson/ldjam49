@@ -993,6 +993,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 034bcde9fde5f4bb79c76334fc0a434b, type: 3}
   - {fileID: 8300000, guid: 42fa3e906bcaa487d852ef3c2eba5503, type: 3}
   - {fileID: 8300000, guid: 9b5845ef09a314255a5c1fa6e81d86e0, type: 3}
+  - {fileID: 8300000, guid: 8318c54e24ad04796a50eacc9038c216, type: 3}
   toddlerManager: {fileID: 364375245904521490}
 --- !u!1 &5509712473151098312
 GameObject:
