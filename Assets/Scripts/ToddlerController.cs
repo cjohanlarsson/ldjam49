@@ -17,6 +17,7 @@ public class ToddlerController : MonoBehaviour
     public float baseJumpSpeed = 4.0f;
     public float idleLength = 1.0f;
     [SerializeField] private float tripLength = 2.0f;
+
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
     [SerializeField] private float maxJumpDuration = 1.5f;
@@ -408,7 +409,6 @@ public class ToddlerController : MonoBehaviour
         this.transform.position = jumpStartPosition;
         this.currentAction = TAction.None;
     }
-
 
     private IEnumerator IdleAction_Coro()
 	{

@@ -55,6 +55,19 @@ public class ToddlerManager : MonoBehaviour
 		}
 	}
 
+	public float Hangriness
+    {
+        get
+        {
+			float maxHangry = float.MinValue;
+			foreach (var t in toddlers)
+            {
+				maxHangry = Mathf.Max(t.GetComponent<HangryController>().Hangriness, maxHangry);
+            }
+			return maxHangry;
+        }
+    }
+
 	private void Awake()
 	{
 		Current = this;
