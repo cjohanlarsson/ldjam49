@@ -30,6 +30,7 @@ public class AudioManager : MonoBehaviour
     {
         // audioSource.clip = layers[0];
         // audioSource.Play();
+        snapshots[0].TransitionTo(0.25f);
         StartCoroutine(hangryTimer());
     }
 
