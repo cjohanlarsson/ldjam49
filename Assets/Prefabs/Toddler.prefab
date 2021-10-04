@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ec7e5ce73a714fb3bb1c4b8a0095970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hangryRateOfIncrease: 1
+  hangryRateOfIncrease: 1.6
   maxHangry: 50
   _hangryLevel: 0
   hangrySounds:
