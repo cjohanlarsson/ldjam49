@@ -404,9 +404,13 @@ public class ToddlerController : MonoBehaviour
             isMoving = true;
             // reset position if tantrum while jumping
             transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
+            GetComponent<CapsuleCollider>().radius = 0.3f;
             Rigidbody rb = GetComponent<Rigidbody>();
+            Rigidbody rbChild = GetComponentInChildren<Rigidbody>();
             rb.isKinematic = false;
-            rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
+            rbChild.isKinematic = false;
+            rb.AddForce(new Vector3(2, -1, 2), ForceMode.Impulse);
+            
             AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
         }
 
