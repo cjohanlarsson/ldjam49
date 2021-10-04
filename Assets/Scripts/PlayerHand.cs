@@ -102,8 +102,10 @@ public class PlayerHand : MonoBehaviour
 		{
 			#region Hand Grabbing
 			bool shouldHandBeClosed = false;
-			bool isGrabKeyHeld = Input.GetKey(KeyCode.Space);
-			bool isGrabKeyDown = Input.GetKeyDown(KeyCode.Space);
+			// bool isGrabKeyHeld = Input.GetKey(KeyCode.Space);
+			// bool isGrabKeyDown = Input.GetKeyDown(KeyCode.Space);
+			bool isGrabKeyHeld = Input.GetKey(KeyCode.Mouse0);
+			bool isGrabKeyDown = Input.GetKeyDown(KeyCode.Mouse0);
 
 			float prevTimeSinceLastGrabState = this.timeSinceLastGrabState;
 			this.timeSinceLastGrabState += Time.deltaTime;
