@@ -230,24 +230,27 @@ public class ToddlerController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit collision)
 	{
-		var grabbable = collision.gameObject.GetComponent<Grabbable>();
-		if (grabbable != null)
-		{
-			if (grabbable.IsBeingGrabbed || this.beingGrabbed)
-			{
-                if(this.currentAction != TAction.Trip)
-				{
-                    if(this.BeingGrabbedBy != null)
-					{
-                        this.BeingGrabbedBy.CancelGrab();
-					}
-                    Debug.LogFormat("Toddler {0} was tripped by {1} ", this.gameObject.name, collision.gameObject.name);
-                    CancelCurrentAction();
-                    StartCoroutine(TripAction_Coro());
-                    return;
-				}
-			}
-		}
+        if (this.tripEnabled)
+        {
+            var grabbable = collision.gameObject.GetComponent<Grabbable>();
+            if (grabbable != null)
+            {
+                if (grabbable.IsBeingGrabbed || this.beingGrabbed)
+                {
+                    if (this.currentAction != TAction.Trip)
+                    {
+                        if (this.BeingGrabbedBy != null)
+                        {
+                            this.BeingGrabbedBy.CancelGrab();
+                        }
+                        Debug.LogFormat("Toddler {0} was tripped by {1} ", this.gameObject.name, collision.gameObject.name);
+                        CancelCurrentAction();
+                        StartCoroutine(TripAction_Coro());
+                        return;
+                    }
+                }
+            }
+        }
 
 		//checks if there is rigidbody
 		if (collision.rigidbody == null || collision.rigidbody.isKinematic) { return; }
