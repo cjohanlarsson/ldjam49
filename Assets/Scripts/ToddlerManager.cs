@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,9 +18,13 @@ public static class Vector2Ex
 
 public class ToddlerManager : MonoBehaviour
 {
+	public static ToddlerManager Current { get; private set; }
+
 	[SerializeField] ToddlerController prefabToSpawn;
 	[SerializeField] GameObject loseScreen;
 	[SerializeField] float spawnRadius = 2.0f;
+
+	private bool hasSetOffOtherBabiesToTantrum = false;
 
 	List<ToddlerController> toddlers = new List<ToddlerController>();
 
@@ -33,6 +36,18 @@ public class ToddlerManager : MonoBehaviour
 			{
 				if(t.HasThrownTantrum)
 				{
+					if(!hasSetOffOtherBabiesToTantrum)
+                    {
+						hasSetOffOtherBabiesToTantrum = true;
+						foreach (var tod in toddlers)
+						{
+							if (!tod.HasThrownTantrum)
+							{
+								tod.delayedTantrum();
+							}
+						}
+					}
+					
 					return true;
 				}
 			}
@@ -42,6 +57,8 @@ public class ToddlerManager : MonoBehaviour
 
 	private void Awake()
 	{
+		Current = this;
+
 		int num = UIStartScreen.NumberOfBabiesSelected;
 		for (int i=0; i < num ; ++i)
 		{
@@ -55,4 +72,10 @@ public class ToddlerManager : MonoBehaviour
 	{
 		loseScreen.SetActive(IsGameOver);
 	}
+
+    private void OnDestroy()
+    {
+		if (Current = this)
+			Current = null;
+    }
 }

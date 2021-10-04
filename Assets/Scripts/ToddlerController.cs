@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(HangryController))]
 public class ToddlerController : MonoBehaviour
 {
-
     public float baseRunSpeed = 2.0f;
     public float baseTurnSpeed = 1.0f;
     [Range(0.0f, 1.0f)]
@@ -17,7 +16,7 @@ public class ToddlerController : MonoBehaviour
     [Range(1.0f, 3.5f)]
     public float baseSpinSpeed = 1.5f;
     public float baseJumpSpeed = 4.0f;
-    
+
     [SerializeField] private float movementRadius = 5.0f;
     [SerializeField] private float maxMovementDuration = 3.0f;
     [SerializeField] private PhysicsBaby physicsBabyPrefab = null;
@@ -44,7 +43,6 @@ public class ToddlerController : MonoBehaviour
     HangryController hc;
     CharacterController characterController;
     GameObject toddlerUI;
-
 
     bool _beingGrabbed = false;
     public bool beingGrabbed
@@ -120,7 +118,7 @@ public class ToddlerController : MonoBehaviour
         Jump
     }
 
-    
+
     private void Awake()
     {
         audioSource = this.GetComponent<AudioSource>();
@@ -130,7 +128,7 @@ public class ToddlerController : MonoBehaviour
         targetPosition = getRandomPositionNearToddler();
         beingGrabbed = false;
 
-        
+
     }
 
     private void OnDestroy()
@@ -141,19 +139,19 @@ public class ToddlerController : MonoBehaviour
     void Start()
     {
         startYPos = transform.position.y;
-		if (physicsBabyPrefab != null)
-		{
-			var pb = Instantiate(physicsBabyPrefab);
-			pb.hipJoint.connectedBody = this.hipRootRigidbody;
-		}
+        if (physicsBabyPrefab != null)
+        {
+            var pb = Instantiate(physicsBabyPrefab);
+            pb.hipJoint.connectedBody = this.hipRootRigidbody;
+        }
 
-		this.toddlerUI = Instantiate(toddlerUIPrefab, this.transform.position, Quaternion.identity);
-		this.toddlerUI.GetComponentInChildren<HangryMeter>().toddlerToWatch = this.GetComponent<HangryController>();
-	}
+        this.toddlerUI = Instantiate(toddlerUIPrefab, this.transform.position, Quaternion.identity);
+        this.toddlerUI.GetComponentInChildren<HangryMeter>().toddlerToWatch = this.GetComponent<HangryController>();
+    }
 
     void Update()
     {
-        if(!alreadyMoving && !_beingGrabbed)
+        if (!alreadyMoving && !_beingGrabbed && !HasThrownTantrum)
         {
             alreadyMoving = true;
             if (readyToRun)
@@ -168,7 +166,7 @@ public class ToddlerController : MonoBehaviour
                     StartCoroutine(MoveTowardTarget(targetPosition));
                     //StartCoroutine(MoveToTarget(targetPosition));
                 }
-                
+
             }
             else
             {
@@ -198,7 +196,7 @@ public class ToddlerController : MonoBehaviour
                             StartCoroutine(Jump());
                         }
                         else { alreadyMoving = false; }
-                        
+
                         break;
                 }
             }
@@ -207,17 +205,17 @@ public class ToddlerController : MonoBehaviour
         UpdateLegs();
     }
 
-	private void LateUpdate()
-	{
+    private void LateUpdate()
+    {
         toddlerUI.transform.position = this.transform.position;
 
     }
 
-	int stepsMade = 0;
+    int stepsMade = 0;
     float prevLerp = -1.0f;
 
     void UpdateLegs()
-	{
+    {
 
         if (this.leftLeg != null && this.rightLeg != null)
         {
@@ -227,25 +225,25 @@ public class ToddlerController : MonoBehaviour
                 lerp = 0.5f;
             }
             else
-			{
-                if( (this.prevLerp < 0.5f && lerp >= 0.5f) || (this.prevLerp > 0.5f && lerp <= 0.5f) )
-				{
+            {
+                if ((this.prevLerp < 0.5f && lerp >= 0.5f) || (this.prevLerp > 0.5f && lerp <= 0.5f))
+                {
                     PlayStepSound();
-				}
+                }
                 this.prevLerp = lerp;
-			}
+            }
             float angle = Mathf.Lerp(-1 * this.legRange, this.legRange, lerp);
 
             this.leftLeg.localEulerAngles = new Vector3(angle, 0, 0);
             this.rightLeg.localEulerAngles = new Vector3(-1 * angle, 0, 0);
         }
-	}
+    }
 
     void PlayStepSound()
-	{
-        if(this.steps.Length > 0)
+    {
+        if (this.steps.Length > 0 && !HasThrownTantrum)
             AudioSource.PlayClipAtPoint(this.steps[this.stepsMade++ % this.steps.Length], this.transform.position);
-	}
+    }
 
 
     Vector3 getRandomPositionNearToddler() {
@@ -382,17 +380,35 @@ public class ToddlerController : MonoBehaviour
 
     public void throwTantrum()
     {
-        HasThrownTantrum = true;
-        audioSource.Stop();
+        if (!HasThrownTantrum)
+        {
+            
+            HasThrownTantrum = true;
+            audioSource.Stop();
+            StopAllCoroutines();
+            alreadyMoving = true;
+            isMoving = true;
+            // reset position if tantrum while jumping
+            transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
+            AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
+        }
+
+    }
+
+    public void delayedTantrum()
+    {
         StopAllCoroutines();
         alreadyMoving = true;
-        // reset position if tantrum while jumping
-        transform.position = new Vector3(transform.position.x, startYPos, transform.position.z);
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-        rb.AddForce(new Vector3(1, 0, 1), ForceMode.Impulse);
-        AudioSource.PlayClipAtPoint(tantrumSFX, this.transform.position);
         
+        StartCoroutine(dTantrum());
+    }
+
+    private IEnumerator dTantrum() {
+        yield return new WaitForSeconds(UnityEngine.Random.value * 2.0f);
+        throwTantrum();
     }
 
     private void OnDrawGizmos()
