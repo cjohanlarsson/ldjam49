@@ -63,7 +63,7 @@ public class HangryController : MonoBehaviour
         while (true)
         {
             
-            if (100 * Hangriness / maxHangry < 25)
+            if (100 * Hangriness / maxHangry < 24)
             {
                 hangryObjects[0].SetActive(false);
                 hangryObjects[1].SetActive(false);
