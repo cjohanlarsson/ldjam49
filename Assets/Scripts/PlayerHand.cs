@@ -124,6 +124,7 @@ public class PlayerHand : MonoBehaviour
 								{
 									grabbable.OnGrabbed();
 									go.transform.position += new Vector3(0, grabOffsetHeight, 0);
+									go.transform.rotation = Quaternion.LookRotation(Random.onUnitSphere, Vector3.up);
 									shouldGrabThisGo = true;
 								}
 							}
@@ -133,6 +134,7 @@ public class PlayerHand : MonoBehaviour
 								this.grabbedObject = go;
 								this.grabState = GrabState.Grabbed;
 								this.timeSinceLastGrabState = 0.0f;
+								break;
 							}
 						}
 					}
