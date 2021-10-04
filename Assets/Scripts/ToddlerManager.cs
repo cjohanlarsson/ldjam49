@@ -36,18 +36,6 @@ public class ToddlerManager : MonoBehaviour
 			{
 				if(t.HasThrownTantrum)
 				{
-					if(!hasSetOffOtherBabiesToTantrum)
-                    {
-						hasSetOffOtherBabiesToTantrum = true;
-						foreach (var tod in toddlers)
-						{
-							if (!tod.HasThrownTantrum)
-							{
-								tod.delayedTantrum();
-							}
-						}
-					}
-					
 					return true;
 				}
 			}
@@ -83,7 +71,22 @@ public class ToddlerManager : MonoBehaviour
 
 	private void Update()
 	{
+		Cursor.visible = IsGameOver;
 		loseScreen.SetActive(IsGameOver);
+		if(IsGameOver)
+		{
+			if (!hasSetOffOtherBabiesToTantrum)
+			{
+				hasSetOffOtherBabiesToTantrum = true;
+				foreach (var tod in toddlers)
+				{
+					if (!tod.HasThrownTantrum)
+					{
+						tod.delayedTantrum();
+					}
+				}
+			}
+		}
 	}
 
     private void OnDestroy()

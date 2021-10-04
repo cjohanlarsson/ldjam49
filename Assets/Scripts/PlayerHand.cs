@@ -2,6 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public static class CameraEx
+{
+
+	public static bool ScreenToWorldPointAtPlane(this Camera cam, Vector2 pos, Plane plane, ref Vector3 result)
+	{
+		return cam.ViewportToWorldPointAtPlane(new Vector2(pos.x / Screen.width, pos.y / Screen.height), plane, ref result);
+	}
+
+	public static bool ViewportToWorldPointAtPlane(this Camera cam, Vector2 pos, Plane plane, ref Vector3 result)
+	{
+		var ray = cam.ViewportPointToRay(new Vector3(pos.x, pos.y, 0f));
+		float enter = 0;
+		if (plane.Raycast(ray, out enter))
+		{
+			result = ray.GetPoint(enter);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+}
+
 public class PlayerHand : MonoBehaviour
 {
 	public enum ControlType
@@ -14,7 +39,9 @@ public class PlayerHand : MonoBehaviour
 		/// <summary>
 		/// Control hand directly
 		/// </summary>
-		KeyboardDirect
+		KeyboardDirect,
+
+		Mouse
 	}
 
 	[Header("Movement")]
@@ -24,6 +51,8 @@ public class PlayerHand : MonoBehaviour
 	[SerializeField] float angularSpeed = 90.0f;
 	[SerializeField] float acceleration = 1.5f;
 	[SerializeField] float moveMaxBounds = 4.0f;
+	[SerializeField] float offsetOfHandForMousePositionCalc = 0.5f;
+	[SerializeField] float maxMouseSpeed = 10.0f;
 
 	[Header("Grabs")]
 	[SerializeField] Transform grabAnchor;
@@ -185,6 +214,7 @@ public class PlayerHand : MonoBehaviour
 
 			Vector2 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
+			Cursor.visible = false;
 			switch (this.controlType)
 			{
 				case ControlType.KeyboardCar:
@@ -220,6 +250,17 @@ public class PlayerHand : MonoBehaviour
 
 					displacement += dir * (maxSpeed * Time.deltaTime);
 
+					break;
+				case ControlType.Mouse:
+
+					Vector3 mouseTarget = Vector3.zero;
+					if ( Camera.main.ScreenToWorldPointAtPlane(Input.mousePosition, new Plane(Vector3.up, this.offsetOfHandForMousePositionCalc), ref mouseTarget))
+					{
+						mouseTarget.y = 0.0f;
+						var currPos = this.transform.position;
+						currPos.y = 0.0f;
+						displacement = Vector3.ClampMagnitude(mouseTarget - currPos, this.maxMouseSpeed * Time.deltaTime);
+					}
 					break;
 			}
 

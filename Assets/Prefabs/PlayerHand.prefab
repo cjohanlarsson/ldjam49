@@ -82,11 +82,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlType: 1
-  maxSpeed: 5
-  maxSpeedReverse: -5
+  maxSpeed: 6
+  maxSpeedReverse: -6
   angularSpeed: 240
-  acceleration: 10
-  moveMaxBounds: 4
+  acceleration: 500
+  moveMaxBounds: 3.75
+  offsetOfHandForMousePositionCalc: -0.5
+  maxMouseSpeed: 60
   grabAnchor: {fileID: 7443901258596525241}
   grabRadius: 0.5
   grabDuration: 0.5
