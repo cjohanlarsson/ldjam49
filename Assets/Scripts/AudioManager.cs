@@ -8,7 +8,8 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     // HangryController hc;
-    private float currentHangriness = 0;
+    int currentHangrinessTier = 0;
+    int HangrinessTier = 0;
 
     [Header("Audio")]
     [SerializeField] AudioClip[] layers;
@@ -41,35 +42,55 @@ public class AudioManager : MonoBehaviour
     void MusicLayerSwitcher()
     {
         float Hangriness = toddlerManager.Hangriness;
-        if (currentHangriness == Hangriness)
+        if (Hangriness < 13)
         {
-            print("Hangriness unchanged");
-            print(Hangriness);
+            HangrinessTier = 0;
+        }
+        else if (Hangriness < 25)
+        {
+            HangrinessTier = 1;
+        }
+        else if (Hangriness < 38)
+        {
+            HangrinessTier = 2;
+        }
+        else if (Hangriness < 50)
+        {
+            HangrinessTier = 3;
+        }
+        else if (Hangriness >= 50)
+        {
+            HangrinessTier = 4;
+        }
+
+        if (currentHangrinessTier == HangrinessTier)
+        {
+            print("Hangriness Tier Unchanged");
         }
         else
         {
-            currentHangriness = Hangriness;
-            if (currentHangriness == 0)
+            currentHangrinessTier = HangrinessTier;
+            if (currentHangrinessTier == 0)
             {
                 audioSource.clip = layers[0];
                 audioSource.Play();
             }
-            else if (currentHangriness == 13)
+            else if (currentHangrinessTier == 1)
             {
                 audioSource.clip = layers[1];
                 audioSource.Play();
             }
-            else if (currentHangriness == 25)
+            else if (currentHangrinessTier == 2)
             {
                 audioSource.clip = layers[2];
                 audioSource.Play();
             }
-            else if (currentHangriness == 38)
+            else if (currentHangrinessTier == 3)
             {
                 audioSource.clip = layers[3];
                 audioSource.Play();
             }
-            else if (currentHangriness == 50)
+            else if (currentHangrinessTier == 4)
             {
                 audioSource.Stop();
             }
